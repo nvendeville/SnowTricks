@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SnowTricks{% endblock %}
+
+{% block body %}
+
+    <h1>SnowTricks</h1>
+
+    <p>Page d'accueil / Liste des tricks</p>
+
+    {% for trick in tricks %}
+        <h2><a href="/{{ trick.slug }}">{{ trick.name }}</a></h2>
+        <div>{{ trick.description }}</div>
+    {% endfor %}
+
+{% endblock %}

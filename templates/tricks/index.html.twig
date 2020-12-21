@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ trick.name }}{% endblock %}
+
+{% block body %}
+
+    <h1>{{ trick.name }}</h1>
+    <p>créé le {{ trick.createdAt|date }}</p>
+    <div>{{ trick.description|raw }}</div>
+
+{% endblock %}
