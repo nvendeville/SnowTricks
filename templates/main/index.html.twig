@@ -4,13 +4,84 @@
 
 {% block body %}
 
-    <h1>SnowTricks</h1>
+    <section id="hero"
+            style="background: url(img/hero3.jpg); background-size: cover; background-position: center center; height: 40rem"
+            class="hero">
+        <div class="container slogan">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="text-uppercase text-blue mb-0">Enjoy mountains and snowboard</p>
+                </div>
+            </div>
 
-    <p>Page d'accueil / Liste des tricks</p>
+        </div>
 
-    {% for trick in tricks %}
-        <h2><a href="/{{ trick.slug }}">{{ trick.name }}</a></h2>
-        <div>{{ trick.description }}</div>
-    {% endfor %}
+
+    </section>
+
+    <div class="dis-flex justify-content-center pt-3">
+        <a href=#listing>
+            <i id="displayListing" class="fas fa-angle-double-down fa-2x text-gray-900"></i>
+        </a>
+    </div>
+
+    <div id="listing" style="display:none;" >
+        <div id="listingTitle" class="pt-4 container text-center pb-3">
+            <h1>Choississez votre trick</h1>
+        </div>
+        <div class="dis-flex flex-wrap justify-content-center">
+            {% for trick in tricks %}
+                {% if loop.index <= 15 %}
+                <a class="col-lg-2 col-md-4 px-md-1 py-1 trick-container no-padding destination d-flex align-items-end bg-center bg-cover" href="post.html" style="background: url(img/travel-home-1.jpg)">
+                    <div class="destination-inner width-trick text-center text-white index-forward has-transition">
+                        <p class="small text-uppercase mb-0">Catégorie</p>
+                        <h2 class="h3 mb-4">{{ trick.name }}</h2>
+                        <div class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white">
+                            <div>
+                                <i class="fas fa-pencil-alt"></i>
+                            </div>
+                            <div>
+                                <i class="fas fa-trash-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div id="divLoadmore" class="dis-flex justify-content-center pb-3 pt-3 ">
+            <button id="loadMore" type="button" class="btn text-uppercase text-inherit btn-dark text-white">Voir plus</button>
+        </div>
+        <div id="endOfListing" style="display: none;" >
+            <div class="dis-flex flex-wrap justify-content-center">
+                {% for trick in tricks %}
+                    {% if loop.index > 15 %}
+                        <a class="col-lg-2 col-md-4 px-md-1 py-1 trick-container no-padding destination d-flex align-items-end bg-center bg-cover" href="post.html" style="background: url(img/travel-home-1.jpg)">
+                            <div class="destination-inner width-trick text-center text-white index-forward has-transition">
+                                <p class="small text-uppercase mb-0">Catégorie</p>
+                                <h2 class="h3 mb-4">{{ trick.name }}</h2>
+                                <div class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white">
+                                    <div>
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-trash-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="dis-flex justify-content-center pb-3 pt-3">
+                <a href="#listingTitle">
+                    <i id="scrollToTitle" class="fas fa-angle-double-up fa-2x text-gray-900"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
 
 {% endblock %}
+

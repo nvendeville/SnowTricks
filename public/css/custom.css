@@ -1,0 +1,54 @@
+/* your styles go here */
+
+.dis-flex {
+    display: flex;
+}
+
+.width-100 {
+    width: 100%;
+}
+
+.no-margin {
+    margin: unset;
+}
+
+.text-blue{
+    color: #2b90d9;
+}
+
+.slogan {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 12rem;
+    position: relative;
+    top: 20rem;
+    font-size: 2em;
+}
+
+.trick-container {
+    width: 21.25rem;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.width-trick {
+    width: 21.25rem;
+}
+
+.no-padding {
+    padding-bottom: unset!important;
+    padding-left: unset!important;
+    padding-right: unset!important;
+}
+
+.text-inherit {
+    font-family: inherit;
+}
+
+
+
+@media (min-width: 1200px) {
+.container {
+    max-width: 100% !important;
+}
+}
