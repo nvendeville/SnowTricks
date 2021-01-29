@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Comments;
+use App\Entity\Comment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -13,7 +13,7 @@ class CommentsFixture extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         for ($count = 0; $count < 80; $count++) {
-            $commentFixture = new Comments();
+            $commentFixture = new Comment();
             $commentFixture->setDescription("Commentaire fictif " . $count);
             $commentFixture->setCreatedAt(new \DateTime());
             $commentFixture->setUser($this->getReference(UsersFixture::USER_REFERENCE . random_int (0, 9)));

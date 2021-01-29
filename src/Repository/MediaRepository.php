@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Media;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @method Media|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,6 +19,7 @@ class MediaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Media::class);
     }
+
 
     // /**
     //  * @return Media[] Returns an array of Media objects

@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Categories;
+use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -13,7 +13,7 @@ class CategoriesFixture extends Fixture
     public function load(ObjectManager $manager)
     {
         for ($count = 0; $count < 6; $count++) {
-            $categoryFixture = new Categories();
+            $categoryFixture = new Category();
             $categoryFixture->setName('catégorie' . $count);
             $this->setReference(self::CATEGORY_REFERENCE . $count, $categoryFixture);
 

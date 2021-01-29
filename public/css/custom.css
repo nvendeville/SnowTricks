@@ -45,6 +45,38 @@
     font-family: inherit;
 }
 
+.margin-10 {
+    margin: 0 10rem;
+}
+
+.border-top {
+    border-top: 1px solid #dee2e6!important;
+    padding-top: 3rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.margin-media {
+    margin: 0 0.5rem 3rem 0.5rem;
+}
+
+.evenly {
+    justify-content: space-evenly;
+}
+
+.padding-card {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.margin-auto {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.radius {
+    border-radius: 0.25rem;
+}
 
 
 @media (min-width: 1200px) {

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=CommentsRepository::class)
  */
-class Comments
+class Comment implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -33,13 +33,13 @@ class Comments
     private $parent_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Tricks::class, inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
@@ -85,27 +85,37 @@ class Comments
         return $this;
     }
 
-    public function getUser(): ?Users
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?Users $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getTrick(): ?Tricks
+    public function getTrick(): ?Trick
     {
         return $this->trick;
     }
 
-    public function setTrick(?Tricks $trick): self
+    public function setTrick(?Trick $trick): self
     {
         $this->trick = $trick;
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'avatar' => $this->getUser()->getAvatar(),
+            'date' => date_format($this->created_at, 'd-m-Y H:i:s'),
+            'pseudo' => $this->getUser()->getPseudo(),
+            'comment' => $this->getDescription()
+        ];
     }
 }
