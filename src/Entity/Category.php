@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=CategoriesRepository::class)
  */
-class Categories
+class Category
 {
     /**
      * @ORM\Id
@@ -25,7 +25,7 @@ class Categories
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Tricks::class, mappedBy="category")
+     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="category")
      */
     private $tricks;
 
@@ -52,14 +52,14 @@ class Categories
     }
 
     /**
-     * @return Collection|Tricks[]
+     * @return Collection|Trick[]
      */
     public function getTricks(): Collection
     {
         return $this->tricks;
     }
 
-    public function addTrick(Tricks $trick): self
+    public function addTrick(Trick $trick): self
     {
         if (!$this->tricks->contains($trick)) {
             $this->tricks[] = $trick;
@@ -69,7 +69,7 @@ class Categories
         return $this;
     }
 
-    public function removeTrick(Tricks $trick): self
+    public function removeTrick(Trick $trick): self
     {
         if ($this->tricks->removeElement($trick)) {
             // set the owning side to null (unless already changed)

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use JsonSerializable;
 use App\Repository\TricksRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=TricksRepository::class)
  */
-class Tricks
+class Trick implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -45,18 +46,18 @@ class Tricks
     private $updated_at;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="trick", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="trick", orphanRemoval=true)
      */
     private $comments;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="tricks")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tricks")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Categories::class, inversedBy="tricks")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="tricks")
      */
     private $category;
 
@@ -137,14 +138,14 @@ class Tricks
     }
 
     /**
-     * @return Collection|Comments[]
+     * @return Collection|Comment[]
      */
     public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    public function addComment(Comments $comment): self
+    public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
@@ -154,7 +155,7 @@ class Tricks
         return $this;
     }
 
-    public function removeComment(Comments $comment): self
+    public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
@@ -166,24 +167,24 @@ class Tricks
         return $this;
     }
 
-    public function getUser(): ?Users
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?Users $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getCategory(): ?Categories
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategory(?Categories $category): self
+    public function setCategory(?Category $category): self
     {
         $this->category = $category;
 
@@ -218,5 +219,25 @@ class Tricks
         }
 
         return $this;
+    }
+
+    public function getFeaturedImg(): ?Media
+    {
+        foreach ($this->getMedia() as $media) {
+            if ($media->getFeaturedImg() == 1) {
+                return $media;
+            }
+        }
+        return null;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'category' => $this->getCategory()->getName(),
+            'slug' =>$this->slug,
+            'name' => $this->name,
+            'img' => $this->getFeaturedImg()->getLink()
+        ];
     }
 }

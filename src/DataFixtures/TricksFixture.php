@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Tricks;
+use App\Entity\Trick;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -14,7 +14,7 @@ class TricksFixture extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         for ($count = 0; $count < 20; $count++) {
-            $trickFixture = new Tricks();
+            $trickFixture = new Trick();
             $trickFixture->setName("Trick " . $count);
             $trickFixture->setDescription("Description du trick" . $count);
             $trickFixture->setSlug("slug_" . $count);

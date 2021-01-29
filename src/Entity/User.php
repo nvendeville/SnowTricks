@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass=UsersRepository::class)
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
-class Users implements UserInterface
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -49,12 +49,12 @@ class Users implements UserInterface
     private $avatar;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="user", orphanRemoval=true)
      */
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Tricks::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="user", orphanRemoval=true)
      */
     private $tricks;
 
@@ -172,14 +172,14 @@ class Users implements UserInterface
     }
 
     /**
-     * @return Collection|Comments[]
+     * @return Collection|Comment[]
      */
     public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    public function addComment(Comments $comment): self
+    public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
@@ -189,7 +189,7 @@ class Users implements UserInterface
         return $this;
     }
 
-    public function removeComment(Comments $comment): self
+    public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
@@ -202,14 +202,14 @@ class Users implements UserInterface
     }
 
     /**
-     * @return Collection|Tricks[]
+     * @return Collection|Trick[]
      */
     public function getTricks(): Collection
     {
         return $this->tricks;
     }
 
-    public function addTrick(Tricks $trick): self
+    public function addTrick(Trick $trick): self
     {
         if (!$this->tricks->contains($trick)) {
             $this->tricks[] = $trick;
@@ -219,7 +219,7 @@ class Users implements UserInterface
         return $this;
     }
 
-    public function removeTrick(Tricks $trick): self
+    public function removeTrick(Trick $trick): self
     {
         if ($this->tricks->removeElement($trick)) {
             // set the owning side to null (unless already changed)

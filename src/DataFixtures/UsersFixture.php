@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Users;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -13,7 +13,7 @@ class UsersFixture extends Fixture
     public function load(ObjectManager $manager)
     {
         for ($count = 0; $count < 10; $count++) {
-            $userFixture = new Users();
+            $userFixture = new User();
             $userFixture->setEmail('pseudo' . $count . '@gmail.com');
             $userFixture->setPassword('pseudo' . $count . '!');
             $userFixture->setPseudo('pseudo' . $count);

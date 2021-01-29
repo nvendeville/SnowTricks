@@ -6,6 +6,8 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="all,follow">
+        <title>{% block title %}{% endblock %}</title>
+
         {% block stylesheets %}
         <!-- Bootstrap CSS-->
         <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
@@ -111,30 +113,13 @@
                 injectSvgSprite('https://bootstraptemple.com/files/icons/orion-svg-sprite.svg');
             </script>
 
-            <!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
-            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-
-            <script>
-                $(document).ready(function () {
-                    $('#displayListing').click(function() {
-                        $('#listing').toggle(1000)
-                    });
-
-                    $('#loadMore').click(function() {
-                        $('#endOfListing').toggle(1000)
-                        $('#loadMore').hide()
-                        $('#divLoadmore').removeClass('pt-3 pb-3')
-                    });
-
-                    $('#scrollToTitle').click(function() {
-                        $("html, body").animate({scrollTop:$('#listingTitle').offset().top}, 1000);
-                    });
-                });
-
-            </script>
-
-
     {% endblock %}
+    {% block otherScript %} {% endblock %}
+
+    <!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+
     </body>
 
 </html>
