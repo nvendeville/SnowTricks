@@ -20,6 +20,7 @@ use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Twig\Environment;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Class TricksController
@@ -69,15 +70,18 @@ class TricksController extends AbstractController
      */
     private $usersRepository;
 
+    private $security;
+
     /**
      * MainController constructor.
      *
-     * @param \App\Repository\TricksRepository     $tricksRepository
-     * @param \App\Repository\MediaRepository      $mediaRepository
-     * @param \App\Repository\CommentsRepository   $commentsRepository
-     * @param \App\Repository\UsersRepository      $usersRepository
-     * @param \Twig\Environment                    $twig
-     * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @param \App\Repository\TricksRepository          $tricksRepository
+     * @param \App\Repository\MediaRepository           $mediaRepository
+     * @param \App\Repository\CommentsRepository        $commentsRepository
+     * @param \App\Repository\UsersRepository           $usersRepository
+     * @param \Twig\Environment                         $twig
+     * @param \Doctrine\ORM\EntityManagerInterface      $entityManager
+     * @param \Symfony\Component\Security\Core\Security $security
      */
     public function __construct(
         TricksRepository $tricksRepository,
@@ -85,7 +89,8 @@ class TricksController extends AbstractController
         CommentsRepository $commentsRepository,
         UsersRepository $usersRepository,
         Environment $twig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        Security $security
     ){
         $this->tricksRepository = $tricksRepository;
         $this->mediaRepository = $mediaRepository;
@@ -96,6 +101,7 @@ class TricksController extends AbstractController
         $this->serializer = new Serializer($this->normalizers, $this->encoders);
         $this->twig = $twig;
         $this->entityManager = $entityManager;
+        $this->security = $security;
     }
 
     /**
@@ -109,6 +115,9 @@ class TricksController extends AbstractController
     {
         $trick = $this->tricksRepository->findOneBy(['slug' => $slug]);
 
+        $username = $this->security->getToken()->getUser()->getUsername();
+        $userId = $this->usersRepository->findOneBy(['email' => $username]);
+
         if (!$trick) {
             throw $this->createAccessDeniedException('Ce trick n\'existe pas');
         }
@@ -118,7 +127,7 @@ class TricksController extends AbstractController
         $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setUser($this->usersRepository->find(1));
+            $comment->setUser($this->usersRepository->find(['id' => $userId]));
             $comment->setCreatedAt($date);
             $comment->setTrick($trick);
 

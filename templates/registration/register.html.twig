@@ -7,15 +7,37 @@
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <h1 class="text-center mb-5 mt-5">Formulaire d'inscription</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-{# {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}#}
+    <div class="container">
+        <div class="row">
+            <div class="mb-5 justify-content-center row col-lg-12">
+                {{ form_start(registrationForm) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                <div>
+                        {{ form_widget(registrationForm.email, {'attr': { 'placeholder': 'Indiquez votre adresse mail','class': 'form-control mb-3', 'name': 'email'}}) }}
+                </div>
+                <div>
+                        {{ form_widget(registrationForm.pseudo, {'attr': { 'placeholder': 'Choisissez un pseudo', 'class': 'form-control mb-3', 'name': 'pseudo'}}) }}
+                </div>
+
+                <div class="form-control height8 mb-3">
+                    <p class="fileType">Téléchargez votre photo</p>
+                    <div>
+                        {{ form_widget(registrationForm.photo, {'attr': { 'class': 'fileType text-secondary','name': 'description'}}) }}
+                    </div>
+
+                </div>
+                <div>
+                        {{ form_widget(registrationForm.plainPassword, {'attr': { 'placeholder': 'Indiquez votre mot de passe', 'class': 'form-control mb-5', 'name': 'password'}}) }}
+                </div>
+                <div>
+                    {{ form_widget(registrationForm.Envoyer, {'attr': { 'class': 'btn btn-dark'}}) }}
+                </div>
+
+
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}
