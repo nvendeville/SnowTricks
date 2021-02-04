@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -21,12 +22,10 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('pseudo', null,[
-                'label' => 'Votre pseudo',
                 'required' => 'true',
             ])
 
             ->add('photo', FileType::class, [
-                'label' => 'Votre photo',
                 'required' => false,
                 'mapped' => false,
                 'constraints' => [
@@ -35,7 +34,6 @@ class RegistrationFormType extends AbstractType
             ])
 
             ->add('email', EmailType::class, [
-                'label' => 'Votre email',
                 'required' => 'true',
             ])
 
@@ -63,6 +61,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add("Envoyer", SubmitType::class)
         ;
     }
 
