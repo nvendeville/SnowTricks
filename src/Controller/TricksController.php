@@ -115,9 +115,10 @@ class TricksController extends AbstractController
     {
         $trick = $this->tricksRepository->findOneBy(['slug' => $slug]);
 
-        $username = $this->security->getToken()->getUser()->getUsername();
-        $userId = $this->usersRepository->findOneBy(['email' => $username]);
-
+        //$username = $this->getUser()
+        //security->getToken()->getUser()->getUsername();
+        //$userId = $this->usersRepository->findOneBy(['email' => $username]);
+//usersRepository->find(['id' => $userId])
         if (!$trick) {
             throw $this->createAccessDeniedException('Ce trick n\'existe pas');
         }
@@ -127,7 +128,7 @@ class TricksController extends AbstractController
         $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setUser($this->usersRepository->find(['id' => $userId]));
+            $comment->setUser($this->getUser());
             $comment->setCreatedAt($date);
             $comment->setTrick($trick);
 
