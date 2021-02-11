@@ -62,7 +62,7 @@ class Trick implements JsonSerializable
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="trick", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="trick", orphanRemoval=true, cascade="all")
      */
     private $media;
 

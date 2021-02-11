@@ -61,7 +61,6 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add("Envoyer", SubmitType::class)
         ;
     }
 

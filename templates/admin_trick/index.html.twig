@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau trick{% endblock %}
+
+{% block body %}
+
+    <h1 class="text-center mb-5 mt-5">Créer un nouveau trick</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="mb-5 justify-content-center row col-lg-12">
+                {{ form_start(adminTrickForm) }}
+                    <div>
+                        {{ form_widget(adminTrickForm.name, {'attr': { 'placeholder': 'Titre du trick','class': 'form-control mb-3', 'name': 'name'}}) }}
+                    </div>
+                    <div>
+                        {{ form_widget(adminTrickForm.description, {'attr': { 'placeholder': 'Description du trick','class': 'form-control mb-3', 'name': 'description'}}) }}
+                    </div>
+                    <div>
+                        {{ form_widget(adminTrickForm.slug, {'attr': { 'placeholder': 'Slug','class': 'form-control mb-3', 'name': 'slug'}}) }}
+                    </div>
+                    <div class="form-control height8 mb-3">
+                        <p class="fileType">Indiquez sa catégorie</p>
+                        <div>
+                            {{ form_widget(adminTrickForm.category, {'attr': { 'class': 'form-control mb-3', 'name': 'category'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-control height8 mb-3">
+                        <p class="fileType">Téléchargez vos images et vidéos</p>
+                        <div>
+                            {{ form_widget(adminTrickForm.media, {'attr': { 'class': 'fileType text-secondary','name': 'media'}}) }}
+                        </div>
+                    </div>
+                    <button class="btn btn-lg mb-5 btn-dark" type="submit">Créer</button>
+                {{ form_end(adminTrickForm) }}
+             </div>
+        </div>
+    </div>
+
+{% endblock %}

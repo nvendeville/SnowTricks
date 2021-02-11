@@ -16,7 +16,6 @@ class CommentFormType extends AbstractType
             ->add('description', null, [
                 'required' => true
             ])
-            ->add('Envoyer', SubmitType::class)
         ;
     }
 

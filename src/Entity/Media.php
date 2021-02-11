@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
  */
-class Media
+class Media implements \ArrayAccess
 {
     /**
      * @ORM\Id
@@ -32,6 +32,16 @@ class Media
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
+
+    /**
+     * Constructor
+     *
+     * @param \App\Entity\Trick|null $trick
+     */
+    public function __construct(Trick $trick = null)
+    {
+        $this->trick = $trick;
+    }
 
     public function getId(): ?int
     {
@@ -72,5 +82,25 @@ class Media
         $this->trick = $trick;
 
         return $this;
+    }
+
+    public function offsetExists($offset)
+    {
+        // TODO: Implement offsetExists() method.
+    }
+
+    public function offsetGet($offset)
+    {
+        // TODO: Implement offsetGet() method.
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        // TODO: Implement offsetSet() method.
+    }
+
+    public function offsetUnset($offset)
+    {
+        // TODO: Implement offsetUnset() method.
     }
 }
