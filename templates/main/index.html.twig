@@ -30,14 +30,15 @@
         </div>
 
         <div id="listTricks" style="display:none;" class="dis-flex flex-wrap justify-content-center">
-            {% set featuredImgs = '' %}
             {% for trick in tricks %}
+                {% set featuredImgs = 'default_featured_img.jpg' %}
                 {% for media in trick.media %}
                     {% if media.featuredImg == 1 %}
                         {% set featuredImgs = media.link %}
                     {% endif %}
                 {% endfor %}
-                <a class="col-lg-2 col-md-4 px-md-1 py-1 trick-container no-padding destination d-flex align-items-end bg-center bg-cover" href="/{{ trick.slug }}" style="background: url(img/{{ featuredImgs }})">
+                <a class="col-lg-2 col-md-4 px-md-1 py-1 trick-container no-padding destination d-flex align-items-end bg-center bg-cover" href="/{{ trick.slug }}"
+                   style="background: url(img/{{ featuredImgs }})">
                     <div class="destination-inner width-trick text-center text-white index-forward has-transition">
                         <p class="small text-uppercase mb-0">{{ trick.category.name }}</p>
                         <h2 class="h3 mb-4">{{ trick.name }}</h2>
@@ -60,6 +61,7 @@
     </div>
 
 
+    {#
     <div id="arrowsDowntest" class="dis-flex justify-content-center pt-3">
         <a href=#listTrickstest>
             <i class="fas fa-angle-double-down fa-2x text-gray-900"></i>
@@ -99,6 +101,8 @@
             <button id="loadMoretest" type="button" class="btn text-uppercase text-inherit btn-dark text-white">Voir plus</button>
         </div>
     </div>
+    #}
+
 
 {% endblock %}
 {% block otherScript %}

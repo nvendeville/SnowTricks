@@ -5,6 +5,14 @@
     color: #999999 !important;
     font-family: "Nunito", sans-serif;
 }
+.height40 {
+    height: 40rem;
+}
+
+.imgContainer {
+    object-fit: contain;
+    object-position: center;
+}
 
 .height8 {
     height: 7.5rem;

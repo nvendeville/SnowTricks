@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Media;
 use App\Entity\Trick;
 use App\Form\TrickFormType;
-use App\Repository\CommentsRepository;
 use App\Repository\MediaRepository;
 use App\Repository\TricksRepository;
 use App\Repository\UsersRepository;
@@ -16,11 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Twig\Environment;
-use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Class AdminTrickController
@@ -85,27 +81,45 @@ class AdminTrickController extends AbstractController
     public function index(Request $request, string $photoDir): Response
     {
         $trick = new Trick();
-        $date = new \DateTime('Now');
+        $slugger = new AsciiSlugger();
         $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trick->setUser($this->getUser());
-            $trick->setCreatedAt($date);
-            $trick->setUpdatedAt($date);
-            $images = $form->get('media')->getData();
+            $trick->setSlug($trick->getId() . "_" . $slugger->slug($form->get('name')->getData()));
+            $trick->setCreatedAt();
+            $trick->setUpdatedAt();
+            $images = $form->get('img')->getData();
+
             foreach ($images as $image) {
-                $filename = md5(uniqid()) . '.' . $image->guessExtension();
+                $mediaImg = new Media();
+                $filenameImg = md5(uniqid()) . '.' . $image->guessExtension();
                 try {
-                    $image->move($photoDir, $filename);
+                    $image->move($photoDir, $filenameImg);
                 } catch (FileException $e) {
                     // unable to upload the photo, give up
                 }
-                $media = new Media();
-                $media->setLink($filename);
-                $media->setFeaturedImg(false);
-                $trick->addMedium($media);
+                $mediaImg->setLink($filenameImg);
+                $mediaImg->setFeaturedImg(false);
+                if ($image == $images[0]) {
+                    $mediaImg->setFeaturedImg(true);
+                }
+                $trick->addMedium($mediaImg);
             }
+
+            /*$videos = $form->get('video')->getData();
+            dd($videos);
+
+            foreach ($videos as $video) {
+                $mediaVideo = new Media();
+                $mediaVideo->setLink($video);
+
+                $mediaVideo->setFeaturedImg(false);
+
+                $trick->addMedium($mediaVideo);
+            }*/
+
             $this->entityManager->persist($trick);
             $this->entityManager->flush();
 
