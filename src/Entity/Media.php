@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
  */
-class Media implements \ArrayAccess
+class Media
 {
     /**
      * @ORM\Id
@@ -23,7 +23,7 @@ class Media implements \ArrayAccess
     private $featured_img;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text", length=65535)
      */
     private $link;
 
@@ -32,6 +32,11 @@ class Media implements \ArrayAccess
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $type;
 
     /**
      * Constructor
@@ -84,23 +89,15 @@ class Media implements \ArrayAccess
         return $this;
     }
 
-    public function offsetExists($offset)
+    public function getType(): ?string
     {
-        // TODO: Implement offsetExists() method.
+        return $this->type;
     }
 
-    public function offsetGet($offset)
+    public function setType(string $type): self
     {
-        // TODO: Implement offsetGet() method.
-    }
+        $this->type = $type;
 
-    public function offsetSet($offset, $value)
-    {
-        // TODO: Implement offsetSet() method.
-    }
-
-    public function offsetUnset($offset)
-    {
-        // TODO: Implement offsetUnset() method.
+        return $this;
     }
 }

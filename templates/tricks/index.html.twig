@@ -12,12 +12,13 @@
 
                     {% if media.featuredImg == 1 %}
                         <div class="col-lg-12 no-padding">
-                            <img class="w-100 py-5" object-fit="" src="img/{{ media.link }}" alt="">
+                            <img class="height40 imgContainer py-5" src="img/{{ media.link }}" alt="">
                         </div>
-
+            </div>
+            <div class="row">
                         {% else %}
-                            <div class="col-lg-3 no-padding margin-media" style="width: 5rem;">
-                                <img class="card-img-top" src="img/{{ media.link }}" alt="">
+                            <div class="col-lg-3 no-padding margin-media">
+                                <img class="height8 imgContainer card-img-top" src="img/{{ media.link }}" alt="">
                             </div>
                         {% endif %}
 

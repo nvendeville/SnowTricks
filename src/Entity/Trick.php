@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TricksRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Trick implements JsonSerializable
 {
@@ -118,11 +119,12 @@ class Trick implements JsonSerializable
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    /**
+    * @ORM\PrePersist
+    */
+    public function setCreatedAt()
     {
-        $this->created_at = $created_at;
-
-        return $this;
+        $this->created_at = new \DateTime();
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -130,11 +132,14 @@ class Trick implements JsonSerializable
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     *
+     */
+    public function setUpdatedAt()
     {
-        $this->updated_at = $updated_at;
-
-        return $this;
+        $this->updated_at = new \DateTime();
     }
 
     /**
@@ -221,14 +226,14 @@ class Trick implements JsonSerializable
         return $this;
     }
 
-    public function getFeaturedImg(): ?Media
+    public function getFeaturedImg(): string
     {
         foreach ($this->getMedia() as $media) {
             if ($media->getFeaturedImg() == 1) {
-                return $media;
+                return $media->getLink();
             }
         }
-        return null;
+        return 'default_featured_img.jpg';
     }
 
     public function jsonSerialize(): array
@@ -237,7 +242,7 @@ class Trick implements JsonSerializable
             'category' => $this->getCategory()->getName(),
             'slug' =>$this->slug,
             'name' => $this->name,
-            'img' => $this->getFeaturedImg()->getLink()
+            'img' => $this->getFeaturedImg()
         ];
     }
 }

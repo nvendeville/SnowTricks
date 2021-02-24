@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,7 +20,6 @@ class TrickFormType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('slug')
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
@@ -27,11 +27,16 @@ class TrickFormType extends AbstractType
                 'expanded' => false,
                 'label' => 'Catégorie',
             ])
-            ->add('media', FileType::class, [
+            ->add('img', FileType::class, [
                 'label' => false,
-                'multiple' => true,
+                'multiple' => false,
                 'mapped' => false,
                 'required' => false
+            ])
+            ->add('video', TextareaType::class, [
+            'label' => false,
+            'mapped' => false,
+            'required' => false
             ]);
     }
 

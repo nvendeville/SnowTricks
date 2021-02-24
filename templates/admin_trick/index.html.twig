@@ -16,9 +16,6 @@
                     <div>
                         {{ form_widget(adminTrickForm.description, {'attr': { 'placeholder': 'Description du trick','class': 'form-control mb-3', 'name': 'description'}}) }}
                     </div>
-                    <div>
-                        {{ form_widget(adminTrickForm.slug, {'attr': { 'placeholder': 'Slug','class': 'form-control mb-3', 'name': 'slug'}}) }}
-                    </div>
                     <div class="form-control height8 mb-3">
                         <p class="fileType">Indiquez sa catégorie</p>
                         <div>
@@ -26,10 +23,16 @@
                         </div>
                     </div>
                     <div class="form-control height8 mb-3">
-                        <p class="fileType">Téléchargez vos images et vidéos</p>
+                        <p class="fileType">Téléchargez vos images</p>
                         <div>
-                            {{ form_widget(adminTrickForm.media, {'attr': { 'class': 'fileType text-secondary','name': 'media'}}) }}
+                            {{ form_widget(adminTrickForm.img, {'attr': { 'class': 'fileType text-secondary','name': 'img'}}) }}
                         </div>
+                    </div>
+                    <div class="form-control height8 mb-3">
+                        <p class="fileType">Téléchargez vos vidéos</p>
+                        <div>
+                                {{ form_widget(adminTrickForm.video, {'attr': { 'class': 'fileType text-secondary','name': 'video'}}) }}
+                            </div>
                     </div>
                     <button class="btn btn-lg mb-5 btn-dark" type="submit">Créer</button>
                 {{ form_end(adminTrickForm) }}
