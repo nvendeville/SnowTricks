@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Trick{% endblock %}
+
+{% block body %}
+
+        <h1 class="text-center mb-5 mt-5">Créer un nouveau trick</h1>
+
+        <div class="container">
+            <div class="row">
+                <div class="mb-5 justify-content-center row col-lg-12">
+                       {{ include('trick/_form.html.twig', {'button_label': 'Créer'}) }}
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

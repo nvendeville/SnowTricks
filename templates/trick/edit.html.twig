@@ -1,0 +1,225 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Trick{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mb-4 mt-5">Vous modifiez le trick : </h1>
+    <h2 class="text-center text-decoration-underline mb-5">{{ trick.name }}</h2>
+    <div class="container">
+        <div class="row ml-5">
+            <div class="mb-5 justify-content-center col-lg-3">
+                {{ include('trick/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+            </div>
+            <div class="mb-5 col-lg-9">
+                <h5 class="text-center mb-5" >Media déjà enregistrés</h5>
+                <div class="row ml-5 justify-content-around">
+
+                {% for media in trick.media %}
+                            <div id="media_container-{{ media.id }}"
+                    class="{% if media.featuredImg == 1 %}borderFeaturedImg{% endif %} col-lg-3 col-md-4 px-md-1 py-1 flex-row text-center">
+                                <img width=289.25 src="/img/{{ media.link }}" alt="">
+                                <div class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white">
+                                    <div>
+                                        <a href="{{ path('trick_feature_image', {id: media.id})}}" data-feature data-token="{{ csrf_token('feature' ~ media.id )}}" title="Mettre l'image à la une">
+                                            <i class="{% if media.featuredImg == 1 %}text-warning{% endif %} text-white fas fa-star"></i>
+                                        </a>
+
+                                    </div>
+                                    <div>
+                                        <a href="{{ path('trick_delete_image', {id: media.id})}}" data-name="media_container-{{ media.id }}" data-delete data-token="{{ csrf_token('delete' ~ media.id )}}">
+                                            <i class=" text-white fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="d-flex justify-content-center">
+        <a class="btn btn-dark btn-lg text-blue" href="{{ path('accueil') }}">Retour à l'accueil</a>
+    </div>
+
+
+
+{% endblock %}
+
+{% block otherScript %}
+    <script>
+        window.onload = () => {
+            // Gestion de l'étoile
+            let featuredImgs = document.querySelectorAll("[data-feature]")
+
+            // On boucle sur links
+            for(featuredImg of featuredImgs){
+                // On écoute le clic
+                featuredImg.addEventListener("click", function(e){
+                    // On empêche la navigation
+                    e.preventDefault()
+
+                    // On demande confirmation
+                    if(confirm("Voulez-vous mettre cette image à la une ?")){
+                        // On envoie une requête Ajax vers le href du lien avec la méthode PATCH
+                        fetch(this.getAttribute("href"), {
+                            method: "PATCH",
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest",
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({"_token": this.dataset.token})
+                        }).then(
+                            // On récupère la réponse en JSON
+                            response => {
+                                return response.json()
+                            }
+                        ).then(data => {
+                            if(data.success) {
+                                location.reload()
+                            }
+                            else
+                                alert(data.error)
+                        }).catch(e => alert(e))
+                    }
+                })
+            }
+
+            // Gestion des boutons "Supprimer"
+            let links = document.querySelectorAll("[data-delete]")
+
+            // On boucle sur links
+            for(link of links){
+                // On écoute le clic
+                link.addEventListener("click", function(e){
+                    // On empêche la navigation
+                    e.preventDefault()
+
+                    // On demande confirmation
+                    if(confirm("Voulez-vous supprimer cette image ?")){
+                        // On envoie une requête Ajax vers le href du lien avec la méthode DELETE
+                        fetch(this.getAttribute("href"), {
+                            method: "DELETE",
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest",
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({"_token": this.dataset.token})
+                        }).then(
+                            // On récupère la réponse en JSON
+                            response => {
+                                return response.json()
+                            }
+                        ).then(data => {
+                            if(data.success)
+                                $('#' + this.getAttribute("data-name")).remove()
+                            else
+                                alert(data.error)
+                        }).catch(e => alert(e))
+                    }
+                })
+            }
+        }
+    </script>
+
+    <script>
+        (function() {
+            // initialisation du gestionnaire de transfert (il ne sert qu'au bouton)
+            let getDataTransfer = () => new DataTransfer()
+            // initialisation d'un tableau qui ne sert pas à grand chose, mais on en a besoin
+            const {concat} = Array.prototype
+
+            // test de compatibilité des navigateurs (surtout pour les vieux)
+            try {
+                getDataTransfer()
+            } catch {
+                getDataTransfer = () => new ClipboardEvent('').clipboardData
+            }
+            // on récupère la div qui contient l'input des images
+            let trickFormImages = document.getElementById('trick_form_img')
+            // on récupère la div qui contiendra les images lors de la recherche d'images à uploader
+            let fileListDisplay = document.getElementById('file-list-display')
+
+            // tableau qui va contenir les fichiers image à envoyer
+            let fileList = []
+            // on intercepte le submit du formulaire pour ajouter les images
+            $('#trick_form_submit_button').click(function () {
+                // on récupère les images à uploader dans le multi-select
+                trickFormImages.files = createFileList(fileList)
+                // on post le formulaire
+                $('#trick_form').submit()
+                // on renvoie false pour ne pas poster deux fois le formulaire
+                return false
+            })
+
+            // à chaque fois qu'on choisit une(des) image(s)
+            trickFormImages.addEventListener('change', function (event) {
+                // on les intercepte
+                for (let i = 0; i < trickFormImages.files.length; i++) {
+                    if (!isFileExist(trickFormImages.files[i])) {
+                        // et on les met dans notre tableau (cf : ligne supérieure 73)
+                        fileList.push(trickFormImages.files[i])
+                    }
+                }
+                // on supprime tout ce qui se trouve sur le multi-select
+                trickFormImages.value = ''
+                renderFileList()
+            })
+
+            // ici on crée les thumbnails
+            let renderFileList = function () {
+                fileListDisplay.innerHTML = ''
+                fileList.forEach(function (file, index) {
+                    let fileDisplayElem = document.createElement('p')
+                    let fileReader = new FileReader()
+                    if (file.type.match('image')) {
+                        fileReader.onload = function () {
+                            let thumbnail = document.createElement('img')
+                            thumbnail.setAttribute("style", "float:left;")
+                            thumbnail.src = fileReader.result
+                            thumbnail.height = 50
+
+                            let imageName = document.createElement('span')
+                            imageName.innerHTML = file.name
+
+                            fileDisplayElem.appendChild(thumbnail)
+                            fileDisplayElem.appendChild(imageName)
+                        }
+                        fileReader.readAsDataURL(file)
+                    } else {
+                        alert('le fichier : ' + file.name + "' n'est pas une image")
+                    }
+                    fileListDisplay.appendChild(fileDisplayElem)
+                })
+            }
+
+            // dans le cas du rendu, si l'image en cours est déjà sélectionnée, on l'ignore
+            let isFileExist = function (file) {
+                let exist = false
+                fileList.forEach(function (exitingFile) {
+                    if (exitingFile.name === file.name) {
+                        exist = true
+                    }
+                })
+                return exist
+            }
+
+            // création de la liste d'images à uploader par rapport aux sélectionnées
+            let createFileList = function () {
+                const files = concat.apply([], arguments)
+                let index = 0
+                const {length} = files
+
+                const dataTransfer = getDataTransfer()
+
+                for (; index < length; index++) {
+                    dataTransfer.items.add(files[index])
+                }
+
+                return dataTransfer.files
+            }
+        })()
+    </script>
+{% endblock %}

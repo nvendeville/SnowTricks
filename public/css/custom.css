@@ -1,4 +1,11 @@
 /* your styles go here */
+
+.fit-content {
+    height: fit-content;
+}
+.borderFeaturedImg {
+    border: 1rem ridge #ffc107;
+}
 .fileType {
     font-size: 0.875rem;
     line-height: 1.5;
@@ -16,6 +23,10 @@
 
 .height8 {
     height: 7.5rem;
+}
+
+.height6 {
+    height: 6rem;
 }
 
 .dis-flex {

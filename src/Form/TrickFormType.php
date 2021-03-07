@@ -29,7 +29,7 @@ class TrickFormType extends AbstractType
             ])
             ->add('img', FileType::class, [
                 'label' => false,
-                'multiple' => false,
+                'multiple' => true,
                 'mapped' => false,
                 'required' => false
             ])

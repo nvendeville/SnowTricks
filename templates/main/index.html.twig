@@ -37,21 +37,31 @@
                         {% set featuredImgs = media.link %}
                     {% endif %}
                 {% endfor %}
-                <a class="col-lg-2 col-md-4 px-md-1 py-1 trick-container no-padding destination d-flex align-items-end bg-center bg-cover" href="/{{ trick.slug }}"
-                   style="background: url(img/{{ featuredImgs }})">
-                    <div class="destination-inner width-trick text-center text-white index-forward has-transition">
-                        <p class="small text-uppercase mb-0">{{ trick.category.name }}</p>
-                        <h2 class="h3 mb-4">{{ trick.name }}</h2>
-                        <div class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white">
-                            <div>
-                                <i class="fas fa-pencil-alt"></i>
-                            </div>
-                            <div>
-                                <i class="fas fa-trash-alt"></i>
-                            </div>
+                <div class="col-lg-2 col-md-4 px-md-1 py-1 trick-container">
+                    <a class="no-padding destination d-flex align-items-end bg-center bg-cover" href="/trick/{{ trick.slug }}/show"
+                       style="background: url(img/{{ featuredImgs }})">
+                        <div class="destination-inner width-trick text-center text-white index-forward has-transition">
+                            <p class="small text-uppercase mb-0">{{ trick.category.name }}</p>
+                            <h2 class="h3 mb-4">{{ trick.name }}</h2>
+                        </div>
+                    </a>
+
+                    <div class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white">
+                        <div>
+                            <a href="/trick/{{ trick.slug }}/edit">
+                                <i class=" text-white fas fa-pencil-alt"></i>
+                            </a>
+
+                        </div>
+                        <div>
+                            <a href="">
+                                <i class=" text-white fas fa-trash-alt"></i>
+                            </a>
                         </div>
                     </div>
-                </a>
+                </div>
+
+
             {% endfor %}
         </div>
 
@@ -136,17 +146,19 @@
                         let tricks = JSON.parse(data.tricks)
                         if(tricks.length>0){
                             for (let trick of tricks){
-                                $("<a></a>")
-                                    .addClass('col-lg-2 col-md-4 px-md-1 py-1 trick-container no-padding destination d-flex align-items-end bg-center bg-cover')
-                                    .attr('href', '/' + trick.slug)
-                                    .attr('style', "background: url(img/" + trick.img + ")")
-                                    .append($('<div  class="destination-inner width-trick text-center text-white index-forward has-transition"></div>')
-                                        .append($('<p class="small text-uppercase mb-0">' + trick.category + '</p>'))
-                                        .append($('<h2 class="h3 mb-4">' + trick.name + '</h2>'))
-                                        .append($('<div  class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white"></div>')
-                                            .append($('<div><i class="fas fa-pencil-alt"></i></div>'))
-                                            .append($('<div><i class="fas fa-trash-alt"></i></div>'))
-                                        )
+                                $('<div class="col-lg-2 col-md-4 px-md-1 py-1 trick-container"></div>')
+                                    .append($('<a class="no-padding destination d-flex align-items-end bg-center bg-cover" href="/trick/' + trick.slug + '/show" ' +
+                                        'style="background: url(\'img/' + trick.img + '\')"></a>')
+                                        .append($('<div  class="destination-inner width-trick text-center text-white index-forward has-transition"></div>')
+                                            .append($('<p class="small text-uppercase mb-0">' + trick.category + '</p>'))
+                                            .append($('<h2 class="h3 mb-4">' + trick.name + '</h2>'))))
+                                    .append($('<div  class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white"></div>')
+                                        .append($('<div></div>')
+                                            .append($('<a href="/trick/' + trick.slug + '/edit"></a>')
+                                                .append($('<i class="fas fa-pencil-alt text-white"></i>'))))
+                                        .append($('<div></div>')
+                                            .append($('<a href=""></a>')
+                                                .append($('<i class="fas fa-trash-alt text-white"></i>'))))
                                     ).appendTo($('#listTricks'))
                             }
                         }

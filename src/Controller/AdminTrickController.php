@@ -128,8 +128,18 @@ class AdminTrickController extends AbstractController
         return $this->render('admin_trick/index.html.twig', ['adminTrickForm' => $form->createView(),]);
     }
 
-    public function edit(Request $request, Trick $trick, string $photoDir)
+    /**
+     * @Route("/admin/trick/{slug}/edit", name="admin_trick_edit")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string                                    $photoDir
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function edit(Request $request, Trick $trick, string $photoDir, string $slug)
     {
+        $trick = new Trick();
+
         $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
