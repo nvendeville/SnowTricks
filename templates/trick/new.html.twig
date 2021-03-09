@@ -9,9 +9,110 @@
         <div class="container">
             <div class="row">
                 <div class="mb-5 justify-content-center row col-lg-12">
-                       {{ include('trick/_form.html.twig', {'button_label': 'Créer'}) }}
+                       {{ include('trick/_form.html.twig', {'button_label': 'Enregistrer'}) }}
                 </div>
             </div>
         </div>
 
+{% endblock %}
+
+{% block otherScript %}
+<script>
+    (function() {
+        // initialisation du gestionnaire de transfert (il ne sert qu'au bouton)
+        let getDataTransfer = () => new DataTransfer()
+        // initialisation d'un tableau qui ne sert pas à grand chose, mais on en a besoin
+        const {concat} = Array.prototype
+
+        // test de compatibilité des navigateurs (surtout pour les vieux)
+        try {
+            getDataTransfer()
+        } catch {
+            getDataTransfer = () => new ClipboardEvent('').clipboardData
+        }
+        // on récupère la div qui contient l'input des images
+        let trickFormImages = document.getElementById('trick_form_img')
+        // on récupère la div qui contiendra les images lors de la recherche d'images à uploader
+        let fileListDisplay = document.getElementById('file-list-display')
+
+        // tableau qui va contenir les fichiers image à envoyer
+        let fileList = []
+        // on intercepte le submit du formulaire pour ajouter les images
+        $('#trick_form_submit_button').click(function () {
+            // on récupère les images à uploader dans le multi-select
+            trickFormImages.files = createFileList(fileList)
+            // on post le formulaire
+            $('#trick_form').submit()
+            // on renvoie false pour ne pas poster deux fois le formulaire
+            return false
+        })
+
+        // à chaque fois qu'on choisit une(des) image(s)
+        trickFormImages.addEventListener('change', function (event) {
+            // on les intercepte
+            for (let i = 0; i < trickFormImages.files.length; i++) {
+                if (!isFileExist(trickFormImages.files[i])) {
+                    // et on les met dans notre tableau (cf : ligne supérieure 73)
+                    fileList.push(trickFormImages.files[i])
+                }
+            }
+            // on supprime tout ce qui se trouve sur le multi-select
+            trickFormImages.value = ''
+            renderFileList()
+        })
+
+        // ici on crée les thumbnails
+        let renderFileList = function () {
+            fileListDisplay.innerHTML = ''
+            fileList.forEach(function (file, index) {
+                let fileDisplayElem = document.createElement('p')
+                let fileReader = new FileReader()
+                if (file.type.match('image')) {
+                    fileReader.onload = function () {
+                        let thumbnail = document.createElement('img')
+                        thumbnail.setAttribute("style", "float:left;")
+                        thumbnail.src = fileReader.result
+                        thumbnail.height = 50
+
+                        let imageName = document.createElement('span')
+                        imageName.innerHTML = file.name
+
+                        fileDisplayElem.appendChild(thumbnail)
+                        fileDisplayElem.appendChild(imageName)
+                    }
+                    fileReader.readAsDataURL(file)
+                } else {
+                    alert('le fichier : ' + file.name + "' n'est pas une image")
+                }
+                fileListDisplay.appendChild(fileDisplayElem)
+            })
+        }
+
+        // dans le cas du rendu, si l'image en cours est déjà sélectionnée, on l'ignore
+        let isFileExist = function (file) {
+            let exist = false
+            fileList.forEach(function (exitingFile) {
+                if (exitingFile.name === file.name) {
+                    exist = true
+                }
+            })
+            return exist
+        }
+
+        // création de la liste d'images à uploader par rapport aux sélectionnées
+        let createFileList = function () {
+            const files = concat.apply([], arguments)
+            let index = 0
+            const {length} = files
+
+            const dataTransfer = getDataTransfer()
+
+            for (; index < length; index++) {
+                dataTransfer.items.add(files[index])
+            }
+
+            return dataTransfer.files
+        }
+    })()
+</script>
 {% endblock %}
