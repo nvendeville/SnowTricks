@@ -1,10 +1,29 @@
 /* your styles go here */
 
+footer{
+   position:absolute;
+    bottom:0;
+    width: 100%;
+}
+
 .fit-content {
     height: fit-content;
 }
+
+.fit-inherit {
+    height: inherit;
+}
+
+.align-items-flexend{
+    align-items: flex-end;
+}
+
+.align-items-flexstart{
+    align-items: flex-start;
+}
+
 .borderFeaturedImg {
-    border: 1rem ridge #ffc107;
+    border: 0.5rem ridge #227bbc;
 }
 .fileType {
     font-size: 0.875rem;
@@ -17,8 +36,8 @@
 }
 
 .imgContainer {
-    object-fit: contain;
-    object-position: center;
+    display: block;
+    margin: auto;
 }
 
 .height8 {
@@ -86,7 +105,12 @@ margin-bottom: 3rem;
 }
 
 .margin-media {
-margin: 0 0.5rem 3rem 0.5rem;
+margin: 0.5rem;
+}
+
+.container-media{
+    width: auto;
+    height: 13rem;
 }
 
 .evenly {

@@ -54,11 +54,12 @@ class Comment implements \JsonSerializable
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt()
     {
-        $this->created_at = $created_at;
-
-        return $this;
+        $this->created_at = new \DateTime();
     }
 
     public function getDescription(): ?string

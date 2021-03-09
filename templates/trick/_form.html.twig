@@ -21,7 +21,7 @@
         </h5>
     {% endif %}
     {% if app.request.attributes.get('_route') == 'trick_edit' %}
-        <div class="form-control height6 mb-3">
+        <div class="form-control fit-content mb-3">
             {% else %}
                 <div class="form-control height8 mb-3">
     {% endif %}
@@ -35,14 +35,14 @@
     {% if app.request.attributes.get('_route') == 'trick_edit' %}
         <h5 class="mb-3 text-center">Nouveau media à enregistrer</h5>
     {% endif %}
-    <div class="form-control height8 mb-3 fit-content">
+    <div class="form-control mb-3 fit-content">
         <p class="fileType">Téléchargez vos images</p>
         <div>
         {{ form_widget(trickForm.img, {'attr': { 'class': 'fileType text-secondary','name': 'img', 'id':'trick_form_img'}}) }}
-            <div id="file-list-display"></div>
+            <div id="file-list-display" class="mt-1 d-flex flex-column"></div>
         </div>
     </div>
-    <div class="form-control height8 mb-3">
+    <div class="form-control fit-content mb-3">
         <p class="fileType">Téléchargez vos vidéos</p>
         <div>
             {{ form_widget(trickForm.video, {'attr': { 'class': 'fileType text-secondary','name': 'video'}}) }}
