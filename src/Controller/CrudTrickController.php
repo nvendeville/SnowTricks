@@ -105,23 +105,15 @@ class CrudTrickController extends AbstractController
                     // unable to upload the photo, give up
                 }
                 $mediaImg->setLink($filenameImg);
+                $mediaImg->setType('image');
                 $mediaImg->setFeaturedImg(false);
                 if ($image == $images[0]) {
                     $mediaImg->setFeaturedImg(true);
                 }
                 $trick->addMedium($mediaImg);
             }
-            /*$videos = $form->get('video')->getData();
-            dd($videos);
+            $this->setVideo($form->get('video')->getData(), $trick);
 
-            foreach ($videos as $video) {
-                $mediaVideo = new Media();
-                $mediaVideo->setLink($video);
-
-                $mediaVideo->setFeaturedImg(false);
-
-                $trick->addMedium($mediaVideo);
-            }*/
             $this->entityManager->persist($trick);
             $this->entityManager->flush();
             return $this->redirectToRoute('accueil');
@@ -144,23 +136,22 @@ class CrudTrickController extends AbstractController
             throw $this->createAccessDeniedException('Ce trick n\'existe pas');
         }
 
-        $date = new \DateTime('Now');
         $comment = new Comment();
         $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setUser($this->getUser());
-            $comment->setCreatedAt($date);
+            $comment->setCreatedAt();
             $comment->setTrick($trick);
 
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('tricks', ['slug' => $trick->getSlug()]);
+            return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug(), 'featuredImg' => $trick->getFeaturedImg()]);
         }
 
         return $this->render('tricks/index.html.twig', [
-            'trick' => $trick, 'offset' => $this->offset, 'comment_form' => $form->createView()]);
+            'trick' => $trick, 'offset' => $this->offset, 'comment_form' => $form->createView(), 'featuredImg' => $trick->getFeaturedImg()]);
     }
 
     /**
@@ -183,10 +174,29 @@ class CrudTrickController extends AbstractController
         return new JsonResponse(['comments' => $this->serializer->serialize($comments, 'json')]);
     }
 
+    public function setVideo(string $formVideos, Trick $trick)
+    {
+        $videos = explode("\n", str_replace("\r", "", $formVideos));
+
+        foreach ($videos as $video) {
+            $mediaVideo = new Media();
+            $explode = explode("?", $video);
+            $type = explode(".", $explode[0]);
+            $mediaVideo->setType($type[1]);
+            $link = explode("=", $explode[1]);
+            $link1 = explode("&", $link[1]);
+            $mediaVideo->setLink($link1[0]);
+            $mediaVideo->setFeaturedImg(false);
+            $trick->addMedium($mediaVideo);
+            $trick->setUpdatedAt();
+        }
+    }
+
     /**
      * @Route("/{slug}/edit", name="trick_edit", methods={"GET","POST"})
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string                                    $slug
+     * @param string                                    $photoDir
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -198,6 +208,7 @@ class CrudTrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $images = $form->get('img')->getData();
+            $this->setVideo($form->get('video')->getData(), $trick);
             foreach ($images as $image) {
                 $mediaImg = new Media();
                 $filenameImg = md5(uniqid()) . '.' . $image->guessExtension();
@@ -280,6 +291,7 @@ class CrudTrickController extends AbstractController
 
         if ($this->isCsrfTokenValid('feature'.$media->getId(), $data['_token'])) {
             $media->setFeaturedImg(true);
+            $trick->setUpdatedAt();
 
             $eman = $this->getDoctrine()->getManager();
             $eman->flush();
