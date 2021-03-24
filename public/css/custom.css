@@ -1,11 +1,44 @@
 /* your styles go here */
 
-footer{
-   position:absolute;
+body {
+    min-height: 100vh;
+}
+.img57 {
+    height: 57px;
+    width: 57px;
+}
+.w40 {
+    width: 40%;
+}
+.justified {
+    text-align: justify;
+}
+.float-left {
+    float: left;
+}
+iframe {
+    width:100%;
+    height:100%;
+    left:0;
+    top:0;
+    overflow:hidden;
+    border-width: unset;
+    border-style: unset;
+    border-color: unset;
+    border-image: unset;
+}
+footer {
+    position: fixed;
     bottom:0;
     width: 100%;
 }
-
+#hero {
+    height: 40rem;
+    background: url(/img/hero3.jpg)  center center;
+}
+.margin-media {
+    margin: 0.5rem;
+}
 .fit-content {
     height: fit-content;
 }
@@ -23,7 +56,7 @@ footer{
 }
 
 .borderFeaturedImg {
-    border: 0.5rem ridge #227bbc;
+    border: solid 1px #ffc107 !important;
 }
 .fileType {
     font-size: 0.875rem;
@@ -64,12 +97,15 @@ margin: unset;
 color: #2b90d9;
 }
 
+.imgBorder {
+    border: solid 1px #2b90d9;
+}
+
 .slogan {
 display: flex;
 justify-content: flex-end;
-padding-right: 12rem;
 position: relative;
-top: 20rem;
+top: 24rem;
 font-size: 2em;
 }
 
@@ -89,12 +125,20 @@ padding-left: unset!important;
 padding-right: unset!important;
 }
 
+.n-p-unset {
+    padding-left: unset !important;
+    padding-right: unset !important;
+}
+
 .text-inherit {
 font-family: inherit;
 }
 
 .margin-10 {
 margin: 0 10rem;
+}
+mb-5 {
+    margin-bottom: 5rem;
 }
 
 .border-top {
@@ -104,13 +148,25 @@ margin-top: 3rem;
 margin-bottom: 3rem;
 }
 
-.margin-media {
-margin: 0.5rem;
+.m-l-r {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+.container-media {
+    height: auto;
+    width: auto;
+    max-height: 200px;
+    max-width: 290px;
 }
 
-.container-media{
-    width: auto;
-    height: 13rem;
+.containerShow {
+    height: 210px;
+    width: 300px;
+}
+
+.containerEdit {
+    height: 252px;
+    width: 300px;
 }
 
 .evenly {
@@ -122,6 +178,14 @@ padding-top: 0.5rem;
 padding-bottom: 0.5rem;
 }
 
+.p-l-r {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.p-t-b {
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
 .margin-auto {
 margin-top: auto;
 margin-bottom: auto;
@@ -131,9 +195,180 @@ margin-bottom: auto;
 border-radius: 0.25rem;
 }
 
-
-@media (min-width: 1200px) {
-.container {
-max-width: 100% !important;
+@media (max-width: 575px) {
+    #hero {
+        height: 32rem;
+        background: url(/img/hero5.jpg) no-repeat center center;
+    }
+    .slogan {
+        font-size: 1.3em;
+        text-align: right;
+        top: 31.5rem;
+        padding: unset;
+        display: flex;
+        position: absolute;
+    }
+    .py-4 {
+        padding-top: unset !important;
+        padding-bottom: unset !important;
+    }
+    #sectionTrick {
+        margin: unset;
+    }
+    .m-t-b {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .m-l-r {
+        margin-left: unset;
+        margin-right: unset;
+    }
+    .height88 {
+        height: 88px;
+    }
+    .height40 {
+        width: 355px;
+        height: auto;
+    }
+    .f-n-w {
+        flex-wrap: nowrap;
+    }
 }
+
+
+@media (min-width: 576px) and (max-width: 767px){
+    #hero {
+        background: url(/img/hero6.jpg) no-repeat center center;
+    }
+    .slogan {
+        font-size: 1.57em;
+        text-align: right;
+        top: 38rem;
+        padding: unset;
+        display: flex;
+        position: absolute;
+    }
+    .trick-container {
+        margin-right: unset;
+    }
+    #sectionTrick {
+        margin: unset;
+    }
+    .m-t-b {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .m-l-r {
+        margin-left: unset;
+        margin-right: unset;
+    }
+    .height88 {
+        height: 88px;
+    }
+    .f-n-w {
+        flex-wrap: nowrap;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #hero {
+        background: url(/img/hero7.jpg) no-repeat center center;
+    }
+
+    .slogan {
+        font-size: 1.8em;
+        text-align: right;
+        top: 35rem;
+        padding: unset;
+        display: flex;
+        position: absolute;
+    }
+    .col-md-4 {
+        flex: 0 0 40%;
+        max-width: 40%;
+    }
+    #sectionTrick {
+        margin: unset;
+    }
+    .m-t-b {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .m-l-r {
+        margin-left: unset;
+        margin-right: unset;
+    }
+    .height88 {
+        height: 88px;
+    }
+    .f-n-w {
+        flex-wrap: nowrap;
+    }
+
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .slogan {
+        font-size: 1.8em;
+        text-align: right;
+        top: 35rem;
+        padding: unset;
+        display: flex;
+        position: absolute;
+
+    }
+    .col-md-4 {
+        flex: 0 0 30%;
+        max-width: 30%;
+    }
+
+    .mr-0 {
+        margin-right: 0.5rem;
+    }
+    .height88 {
+        height: 88px;
+    }
+    #sectionTrick {
+        margin: unset;
+    }
+    .col-lg-2 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+    .m-t-b {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .f-d-r {
+        flex-direction: row;
+        display: flex;
+    }
+    .m-r-unset {
+        margin-right: unset;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1699px) {
+    .container {
+    max-width: 100% !important;
+}
+    .col-lg-2 {
+        flex: 0 0 24%;
+        max-width: 24%;
+    }
+    #sectionTrick {
+        margin: unset;
+    }
+
+    .m-t-b {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .f-d-r {
+        flex-direction: row;
+        display: flex;
+    }
+    .m-r-unset {
+        margin-right: unset;
+    }
 }

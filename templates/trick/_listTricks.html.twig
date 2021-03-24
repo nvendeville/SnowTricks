@@ -1,0 +1,29 @@
+{% for trick in tricks %}
+    {% set featuredImgs = 'default_featured_img.jpg' %}
+    {% for media in trick.media %}
+        {% if media.featuredImg == 1 %}
+            {% set featuredImgs = media.link %}
+        {% endif %}
+    {% endfor %}
+    <div class="col-lg-2 col-md-4 px-md-1 py-1 trick-container">
+        <a class="no-padding destination d-flex align-items-end bg-center bg-cover" href="/trick/{{ trick.slug }}/show"
+           style="background: url(img/{{ featuredImgs }})">
+            <div class="destination-inner width-trick text-center text-white index-forward has-transition">
+                <p class="small text-uppercase mb-0">{{ trick.category.name }}</p>
+                <h2 class="h3 mb-4">{{ trick.name }}</h2>
+            </div>
+        </a>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="d-flex justify-content-around btn btn-primary btn-block destination-btn text-white">
+                <div class="d-flex align-items-center">
+                    <a href="{{ path("trick_edit", {"slug": trick.slug }) }}">
+                        <i class="text-white fas fa-pencil-alt"></i>
+                    </a>
+                </div>
+                <div>
+                    {{ include('trick/_delete_form.html.twig') }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}

@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Repository\MediaRepository;
 use App\Repository\TricksRepository;
+use App\Service\HasMore;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,20 +17,23 @@ use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
+
 /**
  * Class MainController
  * @package App\Controller
  */
 class MainController extends AbstractController
 {
+    use HasMore;
+
     /**
      * @var TricksRepository
      */
-    private $tricksRepository;
+    private TricksRepository $tricksRepository;
     /**
      * @var MediaRepository
      */
-    private $mediaRepository;
+    private MediaRepository $mediaRepository;
     /**
      * @var int
      */
@@ -39,15 +45,16 @@ class MainController extends AbstractController
     /**
      * @var \Symfony\Component\Serializer\Encoder\JsonEncoder[]
      */
-    private $encoders;
+    private array $encoders;
     /**
      * @var \Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer[]
      */
-    private $normalizers;
+    private array $normalizers;
     /**
      * @var \Symfony\Component\Serializer\Serializer
      */
-    private $serializer;
+    private Serializer $serializer;
+
 
     /**
      * MainController constructor.
@@ -79,14 +86,20 @@ class MainController extends AbstractController
         }
 
         $tricks = $this->tricksRepository->findBy([], ['created_at' => 'desc'], $this->limit, $this->offset);
-
+        $hasMore = $this->hasMore($this->tricksRepository, count($tricks), $this->limit, $this->offset + $this->limit);
 
         if ($isAjax) {
-            return new JsonResponse(['tricks' => $this->serializer->serialize($tricks, 'json')]);
-            //return new JsonResponse(['tricks' => $tricks]);
-
+            $response = [
+                'tricks' => $this->render('trick/_listTricks.html.twig', ['tricks' => $tricks])->getContent(),
+                'hasMore' => $hasMore
+            ];
+            return new JsonResponse($response);
         }
 
-        return $this->render('main/index.html.twig', ['tricks' => $tricks, 'offset' => ($this->offset + 5)]);
+        return $this->render('main/index.html.twig', [
+            'tricks' => $tricks,
+            'offset' => ($this->offset + $this->limit),
+            'hasMore' => $hasMore
+        ]);
     }
 }

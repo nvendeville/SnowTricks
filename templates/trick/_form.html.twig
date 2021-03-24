@@ -1,4 +1,9 @@
 {{ form_start(trickForm, {'attr': { 'id': 'trick_form'}}) }}
+ {% for message in app.flashes('error') %}
+     <div class="alert alert-danger">
+            {{ message }}
+        </div>
+ {% endfor %}
     {% if app.request.attributes.get('_route') == 'trick_edit' %}
     <h5 class="text-center">
         {{ form_label(trickForm, 'Titre du Trick') }}

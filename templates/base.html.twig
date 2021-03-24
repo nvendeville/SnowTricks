@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, height=device-height">
         <meta name="robots" content="all,follow">
         <title>{% block title %}{% endblock %}</title>
 
@@ -29,34 +29,34 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
     </head>
 
-    <body>
+<body>
 
     <header class="header dis-flex">
         <nav class="navbar width-100 navbar-expand-lg navbar-light border-gray py-2 bg-light">
             <div class="container width-100 no-margin">
                 <button class="navbar-toggler navbar-toggler-right mx-auto border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
 
-                <div class="collapse navbar-collapse width-100 justify-content-between" id="navbarSupportedContent">
+                <div id="navbarcollapse" class="collapse navbar-collapse width-100 justify-content-between" id="navbarSupportedContent">
                     <div>
                     <img src="/img/logosmall.png" alt="logo SnowTricks">
                    </div>
                     <ul class="navbar-nav">
                         <li class="nav-item px-1">
-                            <!-- Link--><a class="nav-link active" href="/">Accueil</a>
+                            <!-- Link--><a id="homeLink" class="nav-link active" href="/">Accueil</a>
                         </li>
                         {%  if is_granted('IS_AUTHENTICATED_FULLY') %}
                             <li class="nav-item px-1">
                                 <!-- Link--><a class="nav-link" href="/logout">Deconnexion</a>
                             </li>
                             <li class="nav-item px-1">
-                                <!-- Link--><a class="nav-link" href="{{ path('trick_new') }}">Nouveau Trick</a>
+                                <!-- Link--><a id="newLink"  class="nav-link" href="{{ path('trick_new') }}">Nouveau Trick</a>
                             </li>
                         {% else %}
                             <li class="nav-item px-1">
-                                <!-- Link--><a class="nav-link" href="/register">S'inscrire</a>
+                                <!-- Link--><a id="registerLink" class="nav-link" href="/register">S'inscrire</a>
                             </li>
                             <li class="nav-item px-1">
-                                <!-- Link--><a class="nav-link" href="/login">Se connecter</a>
+                                <!-- Link--><a id="loginLink" class="nav-link" href="/login">Se connecter</a>
                             </li>
                         {% endif %}
 
@@ -96,9 +96,9 @@
             <script src="/jquery/jquery.min.js"></script>
             <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
             <script src="/owl.carousel2/owl.carousel.min.js"></script>
-            <script src="/js/front.js"></script>
 
             <script>
+
                 // ------------------------------------------------------- //
                 //   Inject SVG Sprite -
                 //   see more here
@@ -121,6 +121,19 @@
                 // while using file:// protocol
                 // pls don't forget to change to your domain :)
                 injectSvgSprite('https://bootstraptemple.com/files/icons/orion-svg-sprite.svg');
+
+
+                $('#navbarcollapse a').removeClass('active')
+
+                let uri = window.location.pathname
+
+                if (uri.includes('new')) {
+                    $('#newLink').addClass('active')
+                } else if (uri.includes('register')) {
+                    $('#registerLink').addClass('active')
+                } else if (uri.includes('login')) {
+                    $('#loginLink').addClass('active')
+                } else $('#homeLink').addClass('active')
             </script>
 
     {% endblock %}
@@ -130,6 +143,6 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
 
-    </body>
+</body>
 
 </html>

@@ -1,43 +1,192 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Trick index{% endblock %}
+{% block title %}{{ trick.name }}{% endblock %}
 
 {% block body %}
-    <h1>Trick index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Slug</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for trick in tricks %}
-            <tr>
-                <td>{{ trick.id }}</td>
-                <td>{{ trick.name }}</td>
-                <td>{{ trick.description }}</td>
-                <td>{{ trick.slug }}</td>
-                <td>{{ trick.createdAt ? trick.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ trick.updatedAt ? trick.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('trick_show', {'id': trick.id}) }}">show</a>
-                    <a href="{{ path('trick_edit', {'id': trick.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <section id="sectionTrick" class="py-5 margin-10">
+        <div class="d-flex justify-content-center">
+            <div class="mr-3">
+                <h1 class="text-center no-margin">{{ trick.name }}</h1>
+            </div>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <div class="d-flex align-items-flexend">
+                    <a class="position-absolute" href="{{ path("trick_edit", {"slug": trick.slug }) }}">
+                        <i class=" text-blue fas fa-pencil-alt"></i>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
 
-    <a href="{{ path('trick_new') }}">Create new</a>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 no-padding">
+                    <img class="imgContainer height40 py-5" src="/img/{{ featuredImg }}" alt="">
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                {% for media in trick.media %}
+                    {% if media.type == 'image' %}
+                        {% if media.featuredImg == 0 %}
+                        <div class="imgBorder p-l-r d-flex justify-content-center margin-media containerShow">
+                            <img class="container-media imgContainer" src="/img/{{ media.link }}" alt="">
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                {% for media in trick.media %}
+                    {%  if media.type != 'image' %}
+                        <div class="imgBorder p-l-r d-flex justify-content-center margin-media containerShow">
+                            <iframe class = "iframe p-t-b d-flex justify-content-center imgContainer"
+                                  type="text/html"
+                                    allowfullscreen
+                                    {% if media.type == 'youtube' %}
+                                            src="https://www.youtube.com/embed/{{ media.link }}"
+                                    {% else %}
+                                             src="https://www.dailymotion.com/embed/video/{{ media.link }}"
+                                    {% endif %}
+                            >
+                            </iframe>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <h3 class="h4 mb-3 col-lg-12 border-top">Description du Trick</h3>
+
+        <div class="container">
+            <div class="row m-r-unset">
+                <div class="col-lg-12 mb-lg-0">
+                    <p class="justified lead first-letter-styled line-height-lg">{{ trick.description }}</p>
+                </div>
+                <div class="col-lg-12 m-l-r f-d-r mt-4 row justify-content-center small text-uppercase mb-0">
+                    <div class="card padding-card d-flex flex-row evenly m-l-r m-t-b col-lg-2">
+                        <div class="margin-auto list-inline-item mr-0 text-muted">Autheur </div>
+                        <div id="avatar" class="margin-auto list-inline-item"><img class="rounded-circle shadow-sm" src="/img/{{ trick.user.avatar }}" alt="" width="70"/></div>
+                        <div class="margin-auto list-inline-item mr-0 font-weight-bold reset-anchor">{{ trick.user.pseudo }}</div>
+                    </div>
+                    <div class="card height88 d-flex flex-row evenly col-lg-3 m-l-r m-t-b">
+                        <div class="margin-auto list-inline-item text-muted align-middle mr-0">mise en ligne </div>
+                        <div class="margin-auto list-inline-item align-middle mr-0 font-weight-bold reset-anchor">{{ trick.createdAt | format_datetime('medium', 'short', locale='fr') }}</div>
+                    </div>
+                    <div class="card height88 d-flex flex-row evenly col-lg-3 m-l-r m-t-b">
+                        <div class="margin-auto list-inline-item text-muted align-middle mr-0">dernière modification </div>
+                        <div class="margin-auto list-inline-item align-middle mr-0 font-weight-bold reset-anchor">{{ trick.updatedAt | format_datetime('medium', 'short', locale='fr') }}</div>
+                    </div>
+                    <div class="card height88 d-flex flex-row evenly col-lg-2 m-l-r m-t-b">
+                        <div class="margin-auto list-inline-item text-muted align-middle mr-0">catégorie </div>
+                        <div class="margin-auto list-inline-item align-middle mr-0 font-weight-bold reset-anchor">{{ trick.category.name }}</div>
+                    </div>
+                </div>
+            </div>
+
+                <h3 class="h4 mb-5 col-lg-12 border-top">Laisser un commentaire</h3>
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                {{ form_start(comment_form) }}
+                <div class="container">
+                    <div class="row">
+                        <div class="mb-5 justify-content-center row m-l-r m-t-b col-lg-12">
+                            <div class="col-lg-7">
+                                {{ form_widget(comment_form.description, {'attr': { 'class': 'form-control radius', 'name': 'message', 'rows': '5', 'placeholder': 'Ecrivez votre message ici'}}) }}
+                            </div>
+                            <div class="form-group text-center margin-auto m-l-r m-t-b col-lg-2">
+                                <button class="btn btn-dark" type="submit">Envoyer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(comment_form) }}
+            {% else %}
+            <div class="col-lg-12 justify-content-center row mb-0">
+                <p class="lead first-letter-styled py-5 line-height-lg">
+                    Pour commenter ce trick, merci de <a href="/register">créer un compte</a> ou de vous <a href="/login">connecter</a>
+                </p>
+            </div>
+            {% endif %}
+
+
+
+                {% set count = 0 %}
+                {% for comment in trick.comments %}
+                    {% set count = count + 1 %}
+                {% endfor %}
+                <h3 class="border-top h4 mb-5 d-flex col-lg-12 align-items-center"><span>Commentaires</span><span class="ml-3 text-gray">{{ count }}</span></h3>
+
+                <div id="containerComments" class="d-flex flex-column">
+
+                </div>
+
+
+            <div id="divLoadmoreComments" class="mb-5 dis-flex justify-content-center pb-3 pt-3 ">
+                <button id="loadMoreComments" type="button" class="btn btn-dark">Voir plus</button>
+            </div>
+
+            <div id="divScrolToTitleComment" class="d-none dis-flex justify-content-center pb-3 pt-3">
+                <a href="#listingTitleComment">
+                    <i id="scrollToTitleComment" class="fas fa-angle-double-up fa-2x text-gray-900"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
 {% endblock %}
+
+{% block otherScript %}
+    <script>
+        $(document).ready(function () {
+
+            let offset = {{ offset }}
+
+            let loadComments = function () {
+                $.ajax({
+                    url : '/trick/{{ trick.slug }}/comments',
+                    type : 'GET',
+                    data : 'offset=' + offset,
+                    dataType : 'json',
+                    success : function(response){
+                        let comments = JSON.parse(response.comments)
+                        if(comments.length > 0){
+                            for (let comment of comments){
+                                $('<div class="container"></div>')
+                                    .append($('<div class="row justify-content-center f-n-w mb-2"></div>')
+                                        .append($('<img  class="img57 rounded-circle align-self-center shadow-sm img-fluid img-thumbnail"></img>')
+                                            .attr('src', "/img/" + comment.avatar)
+                                        )
+                                        .append($('<div  class="col-lg-5 ml-2 card radius width17 padding-card"></div>')
+                                            .append($('<p class="small mb-0 text-primary">' + comment.date + '</p>'))
+                                            .append($('<h5>' + comment.pseudo + '</h5>'))
+                                            .append($('<p  class="text-muted text-small text-left">' + comment.comment + '</p>'))
+                                            .append($('<a class="reset-anchor text-small" href="#"><i class="fas fa-share mr-2 text-primary"></i><strong>Répondre</strong></a>'))
+                                        )
+                                    )
+                                    .appendTo($('#containerComments'))
+                            }
+                        }
+                        if(response.hasMore == false){
+                            $('#loadMoreComments').addClass('d-none')
+                            $('#containerComments'.addClass('mb-5'))
+                        }
+                        offset += 4
+                    }
+                })
+            }
+
+            $('#loadMoreComments').click(function() {
+                $('#divLoadmoreComments').removeClass('pt-3 pb-3')
+                loadComments()
+            })
+
+            $('#scrollToTitle').click(function() {
+                $("html, body").animate({scrollTop:$('#listingTitle').offset().top}, 1000)
+            })
+
+            loadComments()
+        });
+
+    </script>
+
+{% endblock %}
+
+

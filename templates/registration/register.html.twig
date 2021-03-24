@@ -11,7 +11,7 @@
 
     <div class="container">
         <div class="row">
-            <div class="mb-5 justify-content-center row col-lg-12">
+            <div class="mb-5 row no-margin justify-content-center col-lg-12">
                 {{ form_start(registrationForm) }}
 
                 <div>
@@ -31,11 +31,13 @@
                 <div>
                         {{ form_widget(registrationForm.plainPassword, {'attr': { 'placeholder': 'Indiquez votre mot de passe', 'class': 'form-control mb-5', 'name': 'password'}}) }}
                 </div>
-                <button class="btn btn-dark" type="submit">S'inscrire</button>
+                <button class="btn mb-5 btn-dark" type="submit">S'inscrire</button>
 
 
                 {{ form_end(registrationForm) }}
             </div>
         </div>
     </div>
+
+
 {% endblock %}

@@ -17,24 +17,44 @@
 
 
     <div class="container">
-        <div class="row ml-5">
+        <div class="row">
             <div class="mb-5 justify-content-center col-lg-3">
                 {{ include('trick/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
             </div>
             <div class="mb-5 col-lg-9">
                 <h5 class="text-center mb-5" >Media déjà enregistrés</h5>
-                <div class="row ml-5 justify-content-around">
+                <div class="row">
+                    <div class="col-lg-6 justify-content-around flex-row d-flex flex-wrap">
+                        {% for media in trick.media %}
+                            {% if media.type == 'image' %}
+                            <div id="media_container-{{ media.id }}" class="imgBorder {% if media.featuredImg == 1 %}borderFeaturedImg{% endif %} d-flex justify-content-end flex-column no-padding containerEdit margin-media">
+                                <div>
+                                    <img class="imgContainer container-media" src="/img/{{ media.link }}" alt="" width="100%" height="100%">
 
-                {% for media in trick.media %}
-                    <div id="media_container-{{ media.id }}" class="{% if media.featuredImg == 1 %}borderFeaturedImg{% endif %} no-padding col-lg-3 margin-media">
-                        {% if media.type == 'image' %}
-                            <div>
-                                <img class="imgContainer" src="/img/{{ media.link }}" alt="" width="100%" height="100%">
+                                </div>
+                                <div class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white">
+                                    <div>
+                                        <a href="{{ path('trick_feature_image', {id: media.id})}}" data-feature data-name="media_container-{{ media.id }}" data-token="{{ csrf_token('feature' ~ media.id )}}" title="Mettre l'image à la une">
+                                            <i class="{% if media.featuredImg == 1 %}text-warning{% endif %} text-white fas fa-star"></i>
+                                        </a>
 
+                                    </div>
+                                    <div>
+                                        <a href="{{ path('trick_delete_image', {id: media.id})}}" data-name="media_container-{{ media.id }}" data-delete data-token="{{ csrf_token('delete' ~ media.id )}}">
+                                            <i title="Supprimer le media" class=" text-white fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        {% else %}
-                            <div>
-                                <iframe style = "width:100%; height:100%; left:0px; top:0px; overflow:hidden"
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-lg-6 justify-content-around lex-row d-flex flex-wrap">
+                        {% for media in trick.media %}
+                            {% if media.type != 'image' %}
+                            <div id="media_container-{{ media.id }}" class="{% if media.featuredImg == 1 %}borderFeaturedImg{% endif %} imgBorder d-flex justify-content-end flex-column no-padding containerEdit margin-media">
+                                <iframe class = "iframe imgContainer container-media"
                                         frameborder = "0"
                                         type="text/html"
                                         allowfullscreen
@@ -45,30 +65,21 @@
                                         {% endif %}
                                 >
                                 </iframe>
-                            </div>
+                                <div class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white">
+                                    <div>
+                                        <a href="{{ path('trick_delete_image', {id: media.id})}}" data-name="media_container-{{ media.id }}" data-delete data-token="{{ csrf_token('delete' ~ media.id )}}">
+                                            <i title="Supprimer le media" class=" text-white fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                        </div>
                         {% endif %}
-
-                        <div class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white">
-                                <div>
-                                    <a href="{{ path('trick_feature_image', {id: media.id})}}" data-feature data-token="{{ csrf_token('feature' ~ media.id )}}" title="Mettre l'image à la une">
-                                        <i class="{% if media.featuredImg == 1 %}text-warning{% endif %} text-white fas fa-star"></i>
-                                    </a>
-
-                                </div>
-                                <div>
-                                    <a href="{{ path('trick_delete_image', {id: media.id})}}" data-name="media_container-{{ media.id }}" data-delete data-token="{{ csrf_token('delete' ~ media.id )}}">
-                                        <i title="Supprimer le media" class=" text-white fas fa-trash-alt"></i>
-                                    </a>
-                                </div>
-                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
                 </div>
-
             </div>
         </div>
     </div>
-
 
     <div class="d-flex justify-content-center">
         <a class="btn btn-dark btn-lg text-blue" href="{{ path('accueil') }}">Retour à l'accueil</a>
@@ -108,7 +119,10 @@
                             }
                         ).then(data => {
                             if(data.success) {
-                                location.reload()
+                                $(".borderFeaturedImg").removeClass('borderFeaturedImg')
+                                $(".text-warning").removeClass('text-warning')
+                                $('#' + this.getAttribute("data-name")).addClass('borderFeaturedImg')
+                                $(this).children(0).addClass('text-warning')
                             }
                             else
                                 alert(data.error)
@@ -207,19 +221,19 @@
                     if (file.type.match('image')) {
                         fileReader.onload = function () {
                             let thumbnail = document.createElement('img')
-                            thumbnail.setAttribute("style", "float:left;")
+                            thumbnail.setAttribute('class', 'float-left')
                             thumbnail.src = fileReader.result
                             thumbnail.height = 50
 
                             let imageName = document.createElement('span')
                             imageName.innerHTML = file.name
 
-                            fileDisplayElem.appendChild(thumbnail)
-                            fileDisplayElem.appendChild(imageName)
+
+
                         }
                         fileReader.readAsDataURL(file)
                     } else {
-                        alert('le fichier : ' + file.name + "' n'est pas une image")
+                        alert('le fichier : ' + file.name + " n'est pas une image")
                     }
                     fileListDisplay.appendChild(fileDisplayElem)
                 })
