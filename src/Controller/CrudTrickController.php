@@ -11,6 +11,8 @@ use App\Repository\CommentsRepository;
 use App\Repository\MediaRepository;
 use App\Repository\TricksRepository;
 use App\Repository\UsersRepository;
+use App\Service\HasMore;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -19,6 +21,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Twig\Environment;
 
@@ -27,6 +32,7 @@ use Twig\Environment;
  */
 class CrudTrickController extends AbstractController
 {
+    use HasMore;
 
     private TricksRepository $tricksRepository;
 
@@ -45,8 +51,18 @@ class CrudTrickController extends AbstractController
     private int $offset = 0;
 
     private int $limit = 4;
-
-    private \Symfony\Component\Serializer\Serializer $serializer;
+    /**
+     * @var \Symfony\Component\Serializer\Encoder\JsonEncoder[]
+     */
+    private $encoders;
+    /**
+     * @var \Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer[]
+     */
+    private $normalizers;
+    /**
+     * @var \Symfony\Component\Serializer\Serializer
+     */
+    private $serializer;
 
     /**
      * AdminTrickController constructor.
@@ -75,6 +91,9 @@ class CrudTrickController extends AbstractController
         $this->entityManager = $entityManager;
         $this->security = $security;
         $this->commentsRepository = $commentsRepository;
+        $this->encoders = [new JsonEncoder()];
+        $this->normalizers = [new JsonSerializableNormalizer()];
+        $this->serializer = new Serializer($this->normalizers, $this->encoders);
     }
 
     /**
@@ -91,32 +110,38 @@ class CrudTrickController extends AbstractController
         $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setUser($this->getUser());
-            $trick->setSlug($trick->getId() . "_" . $slugger->slug($form->get('name')->getData()));
-            $trick->setCreatedAt();
-            $trick->setUpdatedAt();
-            $images = $form->get('img')->getData();
-            foreach ($images as $image) {
-                $mediaImg = new Media();
-                $filenameImg = md5(uniqid()) . '.' . $image->guessExtension();
-                try {
-                    $image->move($photoDir, $filenameImg);
-                } catch (FileException $e) {
-                    // unable to upload the photo, give up
+            try {
+                $trick->setUser($this->getUser());
+                $trick->setSlug($slugger->slug($form->get('name')->getData()));
+                $trick->setCreatedAt();
+                $trick->setUpdatedAt();
+                $images = $form->get('img')->getData();
+                foreach ($images as $image) {
+                    $mediaImg = new Media();
+                    $filenameImg = md5(uniqid()) . '.' . $image->guessExtension();
+                    try {
+                        $image->move($photoDir, $filenameImg);
+                    } catch (FileException $e) {
+                        // unable to upload the photo, give up
+                    }
+                    $mediaImg->setLink($filenameImg);
+                    $mediaImg->setType('image');
+                    $mediaImg->setFeaturedImg(false);
+                    if ($image == $images[0]) {
+                        $mediaImg->setFeaturedImg(true);
+                    }
+                    $trick->addMedium($mediaImg);
                 }
-                $mediaImg->setLink($filenameImg);
-                $mediaImg->setType('image');
-                $mediaImg->setFeaturedImg(false);
-                if ($image == $images[0]) {
-                    $mediaImg->setFeaturedImg(true);
+                if ($form->get('video')->getData() != "") {
+                    $this->setVideo($form->get('video')->getData(), $trick);
                 }
-                $trick->addMedium($mediaImg);
-            }
-            $this->setVideo($form->get('video')->getData(), $trick);
 
-            $this->entityManager->persist($trick);
-            $this->entityManager->flush();
-            return $this->redirectToRoute('accueil');
+                $this->entityManager->persist($trick);
+                $this->entityManager->flush();
+                return $this->redirectToRoute('accueil');
+            } catch (UniqueConstraintViolationException $e) {
+                $this->addFlash('error', 'Un trick portant ce nom existe déjà');
+            }
         }
         return $this->render('trick/new.html.twig', ['trickForm' => $form->createView(),]);
     }
@@ -150,7 +175,7 @@ class CrudTrickController extends AbstractController
             return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug(), 'featuredImg' => $trick->getFeaturedImg()]);
         }
 
-        return $this->render('tricks/index.html.twig', [
+        return $this->render('trick/index.html.twig', [
             'trick' => $trick, 'offset' => $this->offset, 'comment_form' => $form->createView(), 'featuredImg' => $trick->getFeaturedImg()]);
     }
 
@@ -163,7 +188,9 @@ class CrudTrickController extends AbstractController
      */
     public function getComments(string $slug, Request $request): Response
     {
+
         $this->offset = $request->query->getInt('offset');
+
         $comments = $this->commentsRepository->findBy(
             ['trick' => $this->tricksRepository->findOneBy(['slug' => $slug])],
             ['created_at' => 'desc'],
@@ -171,13 +198,17 @@ class CrudTrickController extends AbstractController
             $this->offset
         );
 
-        return new JsonResponse(['comments' => $this->serializer->serialize($comments, 'json')]);
+        $hasMore = $this->hasMore($this->commentsRepository, count($comments), $this->limit, $this->offset + $this->limit);
+
+        return new JsonResponse([
+            'comments' => $this->serializer->serialize($comments, 'json'),
+            'hasMore' => $hasMore
+        ]);
     }
 
     public function setVideo(string $formVideos, Trick $trick)
     {
         $videos = explode("\n", str_replace("\r", "", $formVideos));
-
         foreach ($videos as $video) {
             $mediaVideo = new Media();
             $explode = explode("?", $video);
@@ -193,7 +224,7 @@ class CrudTrickController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}/edit", name="trick_edit", methods={"GET","POST"})
+     * @Route("/edit/{slug}", name="trick_edit", methods={"GET","POST"})
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string                                    $slug
      * @param string                                    $photoDir

@@ -3,9 +3,11 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
+    <h1 class="text-center mb-5 mt-5">Connectez-vous</h1>
+
     <div class="container">
         <div class="row">
-            <div class="mb-5 justify-content-center row col-lg-12">
+            <div class="mb-5 row no-margin justify-content-center col-lg-12">
 <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -19,14 +21,13 @@
         </div>
     {% endif %}
 
-    <h1 class="h3 mt-5 text-center mb-5 font-weight-normal">Connectez-vous</h1>
 
-
-                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" placeholder="Email" class="form-control mb-3" required autofocus>
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" placeholder="Email" class="form-control mb-3"  required autofocus>
                 <input type="password" name="password" id="inputPassword" placeholder="Mot de passe" class="form-control mb-5" required>
 
                 <input type="hidden" name="_csrf_token"
                        value="{{ csrf_token('authenticate') }}">
+                <input type="hidden" name="_target_path" value="{{ app.request.headers.get('referer') }}">
 
 
 

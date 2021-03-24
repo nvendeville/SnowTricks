@@ -4,9 +4,7 @@
 
 {% block body %}
 
-    <section id="hero"
-            style="background: url(img/hero3.jpg); background-size: cover; background-position: center center; height: 40rem"
-            class="hero">
+    <div id="hero">
         <div class="container slogan">
             <div class="row">
                 <div class="col-lg-12">
@@ -15,61 +13,28 @@
             </div>
 
         </div>
-
-
-    </section>
+    </div>
 
     <div id="arrowsDown" class="dis-flex justify-content-center pt-3">
         <a href=#listTricks>
             <i class="fas fa-angle-double-down fa-2x text-gray-900"></i>
         </a>
     </div>
+
     <div id="listing">
         <div id="listingTitle" style="display:none;" class="pt-4 container text-center pb-3">
             <h1>Choississez votre trick</h1>
         </div>
 
         <div id="listTricks" style="display:none;" class="dis-flex flex-wrap justify-content-center">
-            {% for trick in tricks %}
-                {% set featuredImgs = 'default_featured_img.jpg' %}
-                {% for media in trick.media %}
-                    {% if media.featuredImg == 1 %}
-                        {% set featuredImgs = media.link %}
-                    {% endif %}
-                {% endfor %}
-                <div class="col-lg-2 col-md-4 px-md-1 py-1 trick-container">
-                    <a class="no-padding destination d-flex align-items-end bg-center bg-cover" href="/trick/{{ trick.slug }}/show"
-                       style="background: url(img/{{ featuredImgs }})">
-                        <div class="destination-inner width-trick text-center text-white index-forward has-transition">
-                            <p class="small text-uppercase mb-0">{{ trick.category.name }}</p>
-                            <h2 class="h3 mb-4">{{ trick.name }}</h2>
-                        </div>
-                    </a>
-                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <div class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white">
-                        <div class="d-flex align-items-center">
-                            <a href="/trick/{{ trick.slug }}/edit">
-                                <i class="text-white fas fa-pencil-alt"></i>
-                            </a>
-
-                        </div>
-                        <div>
-                            {{ include('trick/_delete_form.html.twig') }}
-
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-
-
-            {% endfor %}
+            {{ include('trick/_listTricks.html.twig') }}
         </div>
 
-        <div id="divLoadmore" style="display:none;" class="dis-flex justify-content-center pb-3 pt-3 ">
+        <div id="divLoadmore" style="display:none;" class="mb-5 dis-flex justify-content-center pb-3 pt-3 ">
             <button id="loadMore" type="button" class="btn text-uppercase text-inherit btn-dark text-white">Voir plus</button>
         </div>
 
-        <div id="divScrolToTitle" class="dis-flex justify-content-center pb-3 pt-3" style="display:none;">
+        <div id="divScrollToTitle" style="display:none;" class="dis-flex justify-content-center pb-3 pt-3">
             <a href="#listingTitle">
                 <i id="scrollToTitle" class="fas fa-angle-double-up fa-2x text-gray-900"></i>
             </a>
@@ -87,9 +52,10 @@
 
             $('#arrowsDown').click(function() {
                 $('#listingTitle').toggle(1000)
-                $('#listTricks').toggle(1000)
+                $("#listTricks").toggle(1000)
                 $('#divLoadmore').toggle(1000)
-                $('#divScrolToTitle').toggle(1000)
+                $('#divScrollToTitle').toggle(1000)
+                $("html, body").animate({scrollTop:$('#listingTitle').offset().top}, 1000)
             });
 
 
@@ -104,31 +70,19 @@
                     type : 'GET',
                     data : 'offset=' + offset,
                     dataType : 'json',
-                    success : function(data){
-                        let tricks = JSON.parse(data.tricks)
-                        if(tricks.length>0){
-                            for (let trick of tricks){
-                                $('<div class="col-lg-2 col-md-4 px-md-1 py-1 trick-container"></div>')
-                                    .append($('<a class="no-padding destination d-flex align-items-end bg-center bg-cover" href="/trick/' + trick.slug + '/show" ' +
-                                        'style="background: url(\'img/' + trick.img + '\')"></a>')
-                                        .append($('<div  class="destination-inner width-trick text-center text-white index-forward has-transition"></div>')
-                                            .append($('<p class="small text-uppercase mb-0">' + trick.category + '</p>'))
-                                            .append($('<h2 class="h3 mb-4">' + trick.name + '</h2>'))))
-                                    .append($('<div  class="dis-flex justify-content-around btn btn-primary btn-block destination-btn text-white"></div>')
-                                        .append($('<div></div>')
-                                            .append($('<a href="/trick/' + trick.slug + '/edit"></a>')
-                                                .append($('<i class="fas fa-pencil-alt text-white"></i>'))))
-                                        .append($('<div></div>')
-                                            .append($('<a href=""></a>')
-                                                .append($('<i class="fas fa-trash-alt text-white"></i>'))))
-                                    ).appendTo($('#listTricks'))
-                            }
+                    success : function(response){
+                        if(response.tricks !== ""){
+                            $('#listTricks').append(response.tricks)
+                        }
+                        if(response.hasMore == false){
+                            $('#loadMore').addClass('d-none')
                         }
                         offset += 5
                     }
                 });
-
             });
+
+
 
             $('#scrollToTitle').click(function() {
                 $("html, body").animate({scrollTop:$('#listingTitle').offset().top}, 1000);
