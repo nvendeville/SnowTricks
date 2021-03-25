@@ -1,45 +1,54 @@
 {{ form_start(trickForm, {'attr': { 'id': 'trick_form'}}) }}
- {% for message in app.flashes('error') %}
-     <div class="alert alert-danger">
-            {{ message }}
+
+     {% for message in app.flashes('error') %}
+         <div class="alert alert-danger">
+                {{ message }}
         </div>
- {% endfor %}
+     {% endfor %}
+
     {% if app.request.attributes.get('_route') == 'trick_edit' %}
-    <h5 class="text-center">
-        {{ form_label(trickForm, 'Titre du Trick') }}
-    </h5>
+        <h5 class="text-center">
+            {{ form_label(trickForm, 'Titre du Trick') }}
+        </h5>
     {% endif %}
+
     <div>
         {{ form_widget(trickForm.name, {'attr': { 'placeholder': 'Titre du trick','class': 'form-control mb-3', 'name': 'name'}}) }}
     </div>
+
     {% if app.request.attributes.get('_route') == 'trick_edit' %}
         <h5 class="text-center">
             {{ form_label(trickForm, 'Description du Trick') }}
         </h5>
     {% endif %}
+
     <div>
         {{ form_widget(trickForm.description, {'attr': { 'placeholder': 'Description du trick','class': 'form-control mb-3', 'name': 'description'}}) }}
     </div>
+
     {% if app.request.attributes.get('_route') == 'trick_edit' %}
         <h5 class="text-center">
             {{ form_label(trickForm, 'Catégorie du Trick') }}
         </h5>
     {% endif %}
+
     {% if app.request.attributes.get('_route') == 'trick_edit' %}
         <div class="form-control fit-content mb-3">
-            {% else %}
-                <div class="form-control height8 mb-3">
+    {% else %}
+        <div class="form-control height8 mb-3">
     {% endif %}
     {% if app.request.attributes.get('_route') == 'trick_new' %}
         <p class="fileType">Indiquez sa catégorie</p>
     {% endif %}
-        <div>
-            {{ form_widget(trickForm.category, {'attr': { 'class': 'form-control mb-3', 'name': 'category'}}) }}
+            <div>
+                {{ form_widget(trickForm.category, {'attr': { 'class': 'form-control mb-3', 'name': 'category'}}) }}
+            </div>
         </div>
-    </div>
+
     {% if app.request.attributes.get('_route') == 'trick_edit' %}
         <h5 class="mb-3 text-center">Nouveau media à enregistrer</h5>
     {% endif %}
+
     <div class="form-control mb-3 fit-content">
         <p class="fileType">Téléchargez vos images</p>
         <div>
@@ -47,13 +56,16 @@
             <div id="file-list-display" class="mt-1 d-flex flex-column"></div>
         </div>
     </div>
+
     <div class="form-control fit-content mb-3">
         <p class="fileType">Téléchargez vos vidéos</p>
         <div>
             {{ form_widget(trickForm.video, {'attr': { 'class': 'fileType text-secondary','name': 'video'}}) }}
         </div>
     </div>
+
     <div class="d-flex justify-content-center">
         <button id="trick_form_submit_button" class="btn btn-lg mb-5 btn-dark">{{ button_label|default('') }}</button>
     </div>
+
 {{ form_end(trickForm) }}

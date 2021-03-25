@@ -81,7 +81,7 @@
                 </div>
             </div>
 
-                <h3 class="h4 mb-5 col-lg-12 border-top">Laisser un commentaire</h3>
+            <h3 class="h4 mb-5 col-lg-12 border-top">Laisser un commentaire</h3>
 
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 {{ form_start(comment_form) }}
@@ -97,6 +97,7 @@
                         </div>
                     </div>
                 </div>
+
                 {{ form_end(comment_form) }}
             {% else %}
             <div class="col-lg-12 justify-content-center row mb-0">
@@ -106,17 +107,15 @@
             </div>
             {% endif %}
 
+            {% set count = 0 %}
+            {% for comment in trick.comments %}
+                {% set count = count + 1 %}
+            {% endfor %}
+            <h3 class="border-top h4 mb-5 d-flex col-lg-12 align-items-center"><span>Commentaires</span><span class="ml-3 text-gray">{{ count }}</span></h3>
 
+            <div id="containerComments" class="d-flex flex-column">
 
-                {% set count = 0 %}
-                {% for comment in trick.comments %}
-                    {% set count = count + 1 %}
-                {% endfor %}
-                <h3 class="border-top h4 mb-5 d-flex col-lg-12 align-items-center"><span>Commentaires</span><span class="ml-3 text-gray">{{ count }}</span></h3>
-
-                <div id="containerComments" class="d-flex flex-column">
-
-                </div>
+            </div>
 
 
             <div id="divLoadmoreComments" class="mb-5 dis-flex justify-content-center pb-3 pt-3 ">
@@ -135,58 +134,10 @@
 
 {% block otherScript %}
     <script>
-        $(document).ready(function () {
-
-            let offset = {{ offset }}
-
-            let loadComments = function () {
-                $.ajax({
-                    url : '/trick/{{ trick.slug }}/comments',
-                    type : 'GET',
-                    data : 'offset=' + offset,
-                    dataType : 'json',
-                    success : function(response){
-                        let comments = JSON.parse(response.comments)
-                        if(comments.length > 0){
-                            for (let comment of comments){
-                                $('<div class="container"></div>')
-                                    .append($('<div class="row justify-content-center f-n-w mb-2"></div>')
-                                        .append($('<img  class="img57 rounded-circle align-self-center shadow-sm img-fluid img-thumbnail"></img>')
-                                            .attr('src', "/img/" + comment.avatar)
-                                        )
-                                        .append($('<div  class="col-lg-5 ml-2 card radius width17 padding-card"></div>')
-                                            .append($('<p class="small mb-0 text-primary">' + comment.date + '</p>'))
-                                            .append($('<h5>' + comment.pseudo + '</h5>'))
-                                            .append($('<p  class="text-muted text-small text-left">' + comment.comment + '</p>'))
-                                            .append($('<a class="reset-anchor text-small" href="#"><i class="fas fa-share mr-2 text-primary"></i><strong>Répondre</strong></a>'))
-                                        )
-                                    )
-                                    .appendTo($('#containerComments'))
-                            }
-                        }
-                        if(response.hasMore == false){
-                            $('#loadMoreComments').addClass('d-none')
-                            $('#containerComments'.addClass('mb-5'))
-                        }
-                        offset += 4
-                    }
-                })
-            }
-
-            $('#loadMoreComments').click(function() {
-                $('#divLoadmoreComments').removeClass('pt-3 pb-3')
-                loadComments()
-            })
-
-            $('#scrollToTitle').click(function() {
-                $("html, body").animate({scrollTop:$('#listingTitle').offset().top}, 1000)
-            })
-
-            loadComments()
-        });
-
+        let offset = {{ offset }}
+        let slug = '{{ trick.slug }}'
     </script>
-
+    <script src="/js/comments.js"></script>
 {% endblock %}
 
 
