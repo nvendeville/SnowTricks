@@ -239,7 +239,10 @@ class CrudTrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $images = $form->get('img')->getData();
-            $this->setVideo($form->get('video')->getData(), $trick);
+            $videos = $form->get('video')->getData();
+            if ($videos != "") {
+                $this->setVideo($videos, $trick);
+            }
             foreach ($images as $image) {
                 $mediaImg = new Media();
                 $filenameImg = md5(uniqid()) . '.' . $image->guessExtension();
@@ -258,7 +261,7 @@ class CrudTrickController extends AbstractController
             }
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('trick_show',['slug'=> $slug]);
+            return $this->redirectToRoute('trick_show', ['slug'=> $slug]);
         }
 
         return $this->render('trick/edit.html.twig', [
