@@ -135,7 +135,7 @@ class CrudTrickController extends AbstractController
                 if ($form->get('video')->getData() != "") {
                     $this->setVideo($form->get('video')->getData(), $trick);
                 }
-
+                $this->addFlash('success', 'Le trick a bien été enregistré');
                 $this->entityManager->persist($trick);
                 $this->entityManager->flush();
                 return $this->redirectToRoute('accueil');

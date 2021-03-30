@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}S'inscrire{% endblock %}
 
 {% block body %}
 
@@ -8,11 +8,16 @@
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
+
+
     <h1 class="text-center mb-5 mt-5">Formulaire d'inscription</h1>
 
     <div class="container">
         <div class="row">
-            <div class="mb-5 row no-margin justify-content-center col-lg-12">
+            <div class="mb-5 padding-12 width-100 justify-content-center col-lg-12">
+                {% for message in app.flashes('errorEmail') %}
+                    <div class="alert alert-danger" role="alert">{{ message }}</div>
+                {% endfor %}
                 {{ form_start(registrationForm) }}
                 <div>
                         {{ form_widget(registrationForm.email, {'attr': { 'placeholder': 'Indiquez votre adresse mail','class': 'form-control mb-3', 'name': 'email'}}) }}

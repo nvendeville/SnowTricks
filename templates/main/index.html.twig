@@ -4,6 +4,10 @@
 
 {% block body %}
 
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
     <div id="hero">
         <div class="container slogan">
             <div class="row">
