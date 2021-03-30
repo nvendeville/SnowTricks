@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Se connecter{% endblock %}
 
 {% block body %}
     <h1 class="text-center mb-5 mt-5">Connectez-vous</h1>
 
     <div class="container">
         <div class="row">
-            <div class="mb-5 row no-margin justify-content-center col-lg-12">
+            <div class="mb-5 padding-12 width-100 justify-content-center col-lg-12">
                 <form method="post">
                     {% if error %}
                         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -28,22 +28,24 @@
                            value="{{ csrf_token('authenticate') }}">
                     <input type="hidden" name="_target_path" value="{{ app.request.headers.get('referer') }}">
 
-                    {#
-                        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                        See https://symfony.com/doc/current/security/remember_me.html
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" class="mr-2" name="_remember_me">Se souvenir de moi
+                        </label>
+                    </div>
 
-                        <div class="checkbox mb-3">
-                            <label>
-                                <input type="checkbox" name="_remember_me"> Remember me
-                            </label>
-                        </div>
-                    #}
-
-                    <button class="btn btn-lg mb-5 btn-dark" type="submit">
+                    <button class="btn btn-lg btn-dark" type="submit">
                         Se connecter
                     </button>
                 </form>
             </div>
         </div>
+        <div class="row">
+            <div class="mb-3 row flex-column no-margin text-center col-lg-12">
+                <a class="ml-3 mb-3" href="{{ path('app_forgot_password_request') }}">Modifier mon mot de passe</a>
+                <a class="ml-3" href="{{ path('app_forgot_password_request') }}">J'ai oublié mon mot de passe</a>
+            </div>
+        </div>
+
     </div>
 {% endblock %}

@@ -5,11 +5,14 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
+use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -34,7 +37,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
@@ -57,16 +59,27 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('nathalievendeville466@gmail.com', 'Snowtricks Admin'))
-                    ->to($user->getEmail())
-                    ->subject('Merci de valider votre adresse mail')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-           );
-            // do anything else you need here, like send an email
+            try {
+                $this->emailVerifier->sendEmailConfirmation(
+                    'app_verify_email',
+                    $user,
+                    (new TemplatedEmail())
+                        ->from(new Address('nathalievendeville466@gmail.com', 'Snowtricks Admin'))
+                        ->to($user->getEmail())
+                        ->subject('Merci de valider votre adresse mail')
+                        ->htmlTemplate('registration/confirmation_email.html.twig')
+                );
 
-            return $this->redirectToRoute('accueil');
+                return $this->redirectToRoute('accueil');
+
+            } catch (TransportException $exception) {
+                $this->addFlash(
+                    'errorEmail',
+                    'L\'email donné n\'est pas valide. Nous n\'avons pas pu vous envoyer l\'email de validation'
+                );
+                $entityManager->remove($user);
+                $entityManager->flush();
+            }
         }
 
         return $this->render('registration/register.html.twig', [

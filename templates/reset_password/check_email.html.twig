@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demande de modification envoyée{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="text-center mt-5 col-lg-12">
+                <p>Un email vient de vous être envoyé à l'adresse précédemment indiquée. Ce lien expirera dans {{ tokenLifetime|date('g') }} heures.</p>
+                <p>Si vous ne recevez cet email, vérifiez vos spams ou réitérer votre demande
+                    <a href="{{ path('app_forgot_password_request') }}">ici</a>
+                   .
+                </p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

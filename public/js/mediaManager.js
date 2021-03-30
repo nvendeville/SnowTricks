@@ -61,7 +61,9 @@ window.onload = () => {
                     imageName.setAttribute("class", "d-block mt-auto mb-auto")
 
                     let deleteLink = document.createElement('a')
-                    deleteLink.innerHTML = 'Supprimer'
+                    let trash = document.createElement('i')
+                    trash.setAttribute("class", "fas fa-trash-alt")
+                    deleteLink.appendChild(trash)
                     deleteLink.setAttribute("class", "d-block mt-auto mb-auto")
                     deleteLink.setAttribute("id", file.name)
                     deleteLink.setAttribute("href", "#")
@@ -70,10 +72,12 @@ window.onload = () => {
                     fileDisplayElem.appendChild(imageName)
                     fileDisplayElem.appendChild(deleteLink)
 
-                    $(deleteLink).click(function () {
+                    $(deleteLink).click(function (event) {
+                        event.preventDefault()
                         fileList.splice(index,1)
                         renderFileList()
                     })
+
                 }
                 fileReader.readAsDataURL(file)
             } else {
@@ -155,7 +159,7 @@ window.onload = () => {
         link.addEventListener("click", function (e) {
             e.preventDefault()
 
-            if (confirm("Voulez-vous supprimer cette image ?")) {
+            if (confirm("Voulez-vous supprimer ce média ?")) {
                 fetch(this.getAttribute("href"), {
                     method: "DELETE",
                     headers: {
