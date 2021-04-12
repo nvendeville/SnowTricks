@@ -3,8 +3,9 @@
 {% block title %}{{ trick.name }}{% endblock %}
 
 {% block body %}
+<div class="site">
 
-    <section id="sectionTrick" class="py-5 margin-10">
+    <section id="sectionTrick" class="py-5 site-content margin-10">
         <div class="d-flex justify-content-center">
             <div class="mr-3">
                 <h1 class="text-center no-margin">{{ trick.name }}</h1>
@@ -21,7 +22,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 no-padding">
-                    <img class="imgContainer height40 py-5" src="/img/{{ featuredImg }}" alt="">
+                    <img class="imgContainer width-100 py-5" src="/img/{{ featuredImg }}" alt="">
                 </div>
             </div>
             <div class="row justify-content-center">
@@ -56,7 +57,7 @@
         <h3 class="h4 mb-3 col-lg-12 border-top">Description du Trick</h3>
 
         <div class="container">
-            <div class="row m-r-unset">
+            <div class="row">
                 <div class="col-lg-12 mb-lg-0">
                     <p class="justified lead first-letter-styled line-height-lg">{{ trick.description }}</p>
                 </div>
@@ -80,57 +81,55 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <h3 class="h4 mb-5 col-lg-12 border-top">Laisser un commentaire</h3>
+        <h3 class="h4 mb-5 col-lg-12 border-top">Laisser un commentaire</h3>
 
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                {{ form_start(comment_form) }}
-                <div class="container">
-                    <div class="row">
-                        <div class="mb-5 justify-content-center row m-l-r m-t-b col-lg-12">
-                            <div class="col-lg-7">
-                                {{ form_widget(comment_form.description, {'attr': { 'class': 'form-control radius', 'name': 'message', 'rows': '5', 'placeholder': 'Ecrivez votre message ici'}}) }}
-                            </div>
-                            <div class="form-group text-center margin-auto m-l-r m-t-b col-lg-2">
-                                <button class="btn btn-dark" type="submit">Envoyer</button>
-                            </div>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            {{ form_start(comment_form) }}
+            <div class="container">
+                <div class="row">
+                    <div class="mb-5 justify-content-center row m-l-r m-t-b col-lg-12">
+                        <div class="col-lg-7">
+                            {{ form_widget(comment_form.description, {'attr': { 'class': 'form-control radius', 'name': 'message', 'rows': '5', 'placeholder': 'Ecrivez votre message ici'}}) }}
+                        </div>
+                        <div class="form-group text-center margin-auto m-l-r m-t-b col-lg-2">
+                            <button class="btn btn-dark" type="submit">Envoyer</button>
                         </div>
                     </div>
                 </div>
-
-                {{ form_end(comment_form) }}
-            {% else %}
-            <div class="col-lg-12 justify-content-center row mb-0">
-                <p class="lead first-letter-styled py-5 line-height-lg">
-                    Pour commenter ce trick, merci de <a href="/register">créer un compte</a> ou de vous <a href="/login">connecter</a>
-                </p>
             </div>
-            {% endif %}
+            {{ form_end(comment_form) }}
+        {% else %}
+        <div class="col-lg-12 justify-content-center no-margin row mb-0">
+            <p class="lead first-letter-styled py-5 line-height-lg">
+                Pour commenter ce trick, merci de <a href="/register">créer un compte</a> ou de vous <a href="/login">connecter</a>
+            </p>
+        </div>
+        {% endif %}
 
-            {% set count = 0 %}
-            {% for comment in trick.comments %}
-                {% set count = count + 1 %}
-            {% endfor %}
-            <h3 class="border-top h4 mb-5 d-flex col-lg-12 align-items-center"><span>Commentaires</span><span class="ml-3 text-gray">{{ count }}</span></h3>
+        {% set count = 0 %}
+        {% for comment in trick.comments %}
+            {% set count = count + 1 %}
+        {% endfor %}
+        <h3 class="border-top h4 mb-5 d-flex col-lg-12 align-items-center"><span>Commentaires</span><span class="ml-3 text-gray">{{ count }}</span></h3>
 
-            <div id="containerComments" class="d-flex flex-column">
+        <div id="containerComments" class="d-flex pr-3 pl-3 flex-column">
+
+        </div>
 
 
-            </div>
+        <div id="divLoadmoreComments" class="mb-5 dis-flex justify-content-center pb-3 pt-3 ">
+            <button id="loadMoreComments" type="button" class="btn btn-dark">Voir plus</button>
+        </div>
 
-
-            <div id="divLoadmoreComments" class="mb-5 dis-flex justify-content-center pb-3 pt-3 ">
-                <button id="loadMoreComments" type="button" class="btn btn-dark">Voir plus</button>
-            </div>
-
-            <div id="divScrolToTitleComment" class="d-none dis-flex justify-content-center pb-3 pt-3">
-                <a href="#listingTitleComment">
-                    <i id="scrollToTitleComment" class="fas fa-angle-double-up fa-2x text-gray-900"></i>
-                </a>
-            </div>
+        <div id="divScrolToTitleComment" class="d-none dis-flex justify-content-center pb-3 pt-3">
+            <a href="#listingTitleComment">
+                <i id="scrollToTitleComment" class="fas fa-angle-double-up fa-2x text-gray-900"></i>
+            </a>
         </div>
     </section>
-
+</div>
 {% endblock %}
 
 {% block otherScript %}

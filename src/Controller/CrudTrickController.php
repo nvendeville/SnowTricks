@@ -253,9 +253,6 @@ class CrudTrickController extends AbstractController
                 }
                 $mediaImg->setLink($filenameImg);
                 $mediaImg->setFeaturedImg(false);
-                if ($image == $images[0]) {
-                    $mediaImg->setFeaturedImg(true);
-                }
                 $mediaImg->setType('image');
                 $trick->addMedium($mediaImg);
             }
@@ -292,17 +289,19 @@ class CrudTrickController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function deleteImage(Media $media, Request $request, string $photoDir): JsonResponse
+    public function deleteMedia(Media $media, Request $request, string $photoDir): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
         if ($this->isCsrfTokenValid('delete'.$media->getId(), $data['_token'])) {
             $link = $media->getLink();
-            unlink($photoDir.'/'.$link);
+            if ($media->getType() == "image") {
+                unlink($photoDir.'/'.$link);
+            }
 
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($media);
-            $em->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($media);
+            $entityManager->flush();
 
             return new JsonResponse(['success' => 1]);
         }

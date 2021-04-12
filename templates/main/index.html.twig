@@ -3,6 +3,7 @@
 {% block title %}SnowTricks{% endblock %}
 
 {% block body %}
+<div class="">
 
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">{{ message }}</div>
@@ -43,6 +44,7 @@
             </a>
         </div>
     </div>
+</div>
 
 {% endblock %}
 

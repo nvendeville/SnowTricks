@@ -19,7 +19,6 @@ $(document).ready(function () {
             success : function (response) {
                 if (response.tricks !== "") {
                     $('#listTricks').append(response.tricks)
-                    $("html, body").animate({scrollTop:$($(".trick-container").last()).offset().top}, 1000)
                 }
                 if (response.hasMore === false) {
                     $('#loadMore').addClass('d-none')
