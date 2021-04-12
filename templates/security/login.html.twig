@@ -15,7 +15,7 @@
 
                     {% if app.user %}
                         <div class="mb-3">
-                            Vous êtes déjà connecté avec l'adresse
+                            Vous êtes déjà connecté en tant que
                             <span class="text-decoration-underline">{{ app.user.username }} </span>
                             <a class="ml-3" href="{{ path('app_logout') }}">Me déconnecter</a>
                         </div>

@@ -9,10 +9,14 @@ $(document).ready(function () {
                 let comments = JSON.parse(response.comments)
                 if (comments.length > 0) {
                     for (let comment of comments) {
+                        let avatar = 'avatardefault.jpg'
+                        if (comment.avatar) {
+                            avatar = comment.avatar
+                        }
                         $('<div class="container"></div>')
                             .append($('<div class="row justify-content-center f-n-w mb-2"></div>')
                                 .append($('<img  class="img57 rounded-circle align-self-center shadow-sm img-fluid img-thumbnail"></img>')
-                                    .attr('src', "/img/" + comment.avatar)
+                                    .attr('src', "/img/" + avatar)
                                 )
                                 .append($('<div  class="col-lg-5 ml-2 card radius width17 padding-card"></div>')
                                     .append($('<p class="small mb-0 text-primary">' + comment.date + '</p>'))

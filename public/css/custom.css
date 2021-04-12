@@ -1,5 +1,15 @@
 /* your styles go here */
 
+.site {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.site-content {
+    flex: 1;
+}
+
 body {
     min-height: 100vh;
 }
@@ -187,6 +197,7 @@ padding-bottom: 0.5rem;
     padding-left: 5px;
     padding-right: 5px;
 }
+
 .p-t-b {
     padding-bottom: 5px;
     padding-top: 5px;

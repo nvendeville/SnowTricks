@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,48 +38,35 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-
-            if ($photo = $form['photo']->getData()) {
-                $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
-                try {
-                    $photo->move($photoDir, $filename);
-                } catch (FileException $e) {
-                    // unable to upload the photo, give up
-                }
-                $user->setAvatar($filename);
-            }
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            // generate a signed url and email it to the user
             try {
-                $this->emailVerifier->sendEmailConfirmation(
-                    'app_verify_email',
-                    $user,
-                    (new TemplatedEmail())
-                        ->from(new Address('nathalievendeville466@gmail.com', 'Snowtricks Admin'))
-                        ->to($user->getEmail())
-                        ->subject('Merci de valider votre adresse mail')
-                        ->htmlTemplate('registration/confirmation_email.html.twig')
-                );
-
-                return $this->redirectToRoute('accueil');
-
-            } catch (TransportException $exception) {
-                $this->addFlash(
-                    'errorEmail',
-                    'L\'email donné n\'est pas valide. Nous n\'avons pas pu vous envoyer l\'email de validation'
-                );
-                $entityManager->remove($user);
+                $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
+                if ($photo = $form['photo']->getData()) {
+                    $filename = bin2hex(random_bytes(6)) . '.' . $photo->guessExtension();
+                    try {
+                        $photo->move($photoDir, $filename);
+                    } catch (FileException $e) {
+                        // unable to upload the photo, give up
+                    }
+                    $user->setAvatar($filename);
+                }
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
                 $entityManager->flush();
+                // generate a signed url and email it to the user
+                try {
+                    $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                        (new TemplatedEmail())->from(new Address('nathalievendeville466@gmail.com', 'Snowtricks Admin'))
+                            ->to($user->getEmail())->subject('Merci de valider votre adresse mail')
+                            ->htmlTemplate('registration/confirmation_email.html.twig'));
+                    return $this->redirectToRoute('accueil');
+                } catch (TransportException $exception) {
+                    $this->addFlash('errorEmail',
+                        'L\'email donné n\'est pas valide. Nous n\'avons pas pu vous envoyer l\'email de validation');
+                    $entityManager->remove($user);
+                    $entityManager->flush();
+                }
+            } catch (UniqueConstraintViolationException $exception) {
+                $this->addFlash('error', 'Ce pseudo a déjà été utilisé');
             }
         }
 
