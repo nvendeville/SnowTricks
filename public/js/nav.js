@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $('#navbarcollapse a').removeClass('active')
+    $('#navbarSupportedContent a').removeClass('active')
 
     let uri = window.location.pathname
 

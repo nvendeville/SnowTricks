@@ -21,6 +21,9 @@ security:
             guard:
                 authenticators:
                     - App\Security\UsersAuthenticator
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 2592000 # 30 days in seconds
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -35,6 +38,6 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/trick/edit/*, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/trick/new, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/trick/edit/*, roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/trick/new, roles: IS_AUTHENTICATED_REMEMBERED }
 

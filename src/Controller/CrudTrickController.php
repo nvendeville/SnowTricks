@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
-use App\Entity\Media;
 use App\Entity\Trick;
 use App\Form\CommentFormType;
 use App\Form\TrickFormType;
@@ -12,11 +11,11 @@ use App\Repository\MediaRepository;
 use App\Repository\TricksRepository;
 use App\Repository\UsersRepository;
 use App\Service\HasMore;
+use App\Service\SetImage;
+use App\Service\SetVideo;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,6 +33,10 @@ class CrudTrickController extends AbstractController
 {
     use HasMore;
 
+    use SetImage;
+
+    use SetVideo;
+
     private TricksRepository $tricksRepository;
 
     private MediaRepository $mediaRepository;
@@ -50,22 +53,14 @@ class CrudTrickController extends AbstractController
 
     private int $offset = 0;
 
-    private int $limit = 4;
-    /**
-     * @var \Symfony\Component\Serializer\Encoder\JsonEncoder[]
-     */
-    private $encoders;
-    /**
-     * @var \Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer[]
-     */
-    private $normalizers;
-    /**
-     * @var \Symfony\Component\Serializer\Serializer
-     */
-    private $serializer;
+    private array $encoders;
+
+    private array $normalizers;
+
+    private Serializer $serializer;
 
     /**
-     * AdminTrickController constructor.
+     * CrudTrickController constructor.
      *
      * @param \App\Repository\TricksRepository          $tricksRepository
      * @param \App\Repository\MediaRepository           $mediaRepository
@@ -115,22 +110,8 @@ class CrudTrickController extends AbstractController
                 $trick->setSlug($slugger->slug($form->get('name')->getData()));
                 $trick->setCreatedAt();
                 $trick->setUpdatedAt();
-                $images = $form->get('img')->getData();
-                foreach ($images as $image) {
-                    $mediaImg = new Media();
-                    $filenameImg = md5(uniqid()) . '.' . $image->guessExtension();
-                    try {
-                        $image->move($photoDir, $filenameImg);
-                    } catch (FileException $e) {
-                        // unable to upload the photo, give up
-                    }
-                    $mediaImg->setLink($filenameImg);
-                    $mediaImg->setType('image');
-                    $mediaImg->setFeaturedImg(false);
-                    if ($image == $images[0]) {
-                        $mediaImg->setFeaturedImg(true);
-                    }
-                    $trick->addMedium($mediaImg);
+                if ($form->get('img')->getData()!= "") {
+                    $this->setImage($form->get('img')->getData(), $photoDir, $trick);
                 }
                 if ($form->get('video')->getData() != "") {
                     $this->setVideo($form->get('video')->getData(), $trick);
@@ -139,12 +120,13 @@ class CrudTrickController extends AbstractController
                 $this->entityManager->persist($trick);
                 $this->entityManager->flush();
                 return $this->redirectToRoute('accueil');
-            } catch (UniqueConstraintViolationException $e) {
+            } catch (UniqueConstraintViolationException $exception) {
                 $this->addFlash('error', 'Un trick portant ce nom existe déjà');
             }
         }
         return $this->render('trick/new.html.twig', ['trickForm' => $form->createView(),]);
     }
+
 
     /**
     * @Route("/{slug}/show", name="trick_show")
@@ -172,55 +154,21 @@ class CrudTrickController extends AbstractController
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug(), 'featuredImg' => $trick->getFeaturedImg()]);
+            return $this->redirectToRoute(
+                'trick_show',
+                ['slug' => $trick->getSlug(), 'featuredImg' => $trick->getFeaturedImg()]
+            );
         }
 
-        return $this->render('trick/index.html.twig', [
-            'trick' => $trick, 'offset' => $this->offset, 'comment_form' => $form->createView(), 'featuredImg' => $trick->getFeaturedImg()]);
-    }
-
-    /**
-     * @Route("/{slug}/comments", name="comments")
-     * @param string                                    $slug
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getComments(string $slug, Request $request): Response
-    {
-
-        $this->offset = $request->query->getInt('offset');
-
-        $comments = $this->commentsRepository->findBy(
-            ['trick' => $this->tricksRepository->findOneBy(['slug' => $slug])],
-            ['created_at' => 'desc'],
-            $this->limit,
-            $this->offset
+        return $this->render(
+            'trick/index.html.twig',
+            [
+            'trick' => $trick,
+            'offset' => $this->offset,
+            'comment_form' => $form->createView(),
+            'featuredImg' => $trick->getFeaturedImg()
+            ]
         );
-
-        $hasMore = $this->hasMore($this->commentsRepository, count($comments), $this->limit, $this->offset + $this->limit);
-
-        return new JsonResponse([
-            'comments' => $this->serializer->serialize($comments, 'json'),
-            'hasMore' => $hasMore
-        ]);
-    }
-
-    public function setVideo(string $formVideos, Trick $trick)
-    {
-        $videos = explode("\n", str_replace("\r", "", $formVideos));
-        foreach ($videos as $video) {
-            $mediaVideo = new Media();
-            $explode = explode("?", $video);
-            $type = explode(".", $explode[0]);
-            $mediaVideo->setType($type[1]);
-            $link = explode("=", $explode[1]);
-            $link1 = explode("&", $link[1]);
-            $mediaVideo->setLink($link1[0]);
-            $mediaVideo->setFeaturedImg(false);
-            $trick->addMedium($mediaVideo);
-            $trick->setUpdatedAt();
-        }
     }
 
     /**
@@ -238,23 +186,12 @@ class CrudTrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $images = $form->get('img')->getData();
-            $videos = $form->get('video')->getData();
-            if ($videos != "") {
-                $this->setVideo($videos, $trick);
+            $trick->resetFeaturedImg();
+            if ($form->get('img')->getData()!= "") {
+                $this->setImage($form->get('img')->getData(), $photoDir, $trick);
             }
-            foreach ($images as $image) {
-                $mediaImg = new Media();
-                $filenameImg = md5(uniqid()) . '.' . $image->guessExtension();
-                try {
-                    $image->move($photoDir, $filenameImg);
-                } catch (FileException $e) {
-                    // unable to upload the photo, give up
-                }
-                $mediaImg->setLink($filenameImg);
-                $mediaImg->setFeaturedImg(false);
-                $mediaImg->setType('image');
-                $trick->addMedium($mediaImg);
+            if ($form->get('video')->getData()!= "") {
+                $this->setVideo($form->get('video')->getData(), $trick);
             }
             $this->getDoctrine()->getManager()->flush();
 
@@ -279,59 +216,5 @@ class CrudTrickController extends AbstractController
         }
 
         return $this->redirectToRoute('accueil');
-    }
-
-    /**
-     * @Route("/supprime/image/{id}", name="trick_delete_image", methods={"DELETE"})
-     * @param \App\Entity\Media                         $media
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $photoDir
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function deleteMedia(Media $media, Request $request, string $photoDir): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
-
-        if ($this->isCsrfTokenValid('delete'.$media->getId(), $data['_token'])) {
-            $link = $media->getLink();
-            if ($media->getType() == "image") {
-                unlink($photoDir.'/'.$link);
-            }
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($media);
-            $entityManager->flush();
-
-            return new JsonResponse(['success' => 1]);
-        }
-            return new JsonResponse(['error' => 'Token Invalide'], 400);
-    }
-
-    /**
-     * @Route("/feature/image/{id}", name="trick_feature_image", methods={"PATCH"})
-     * @param \App\Entity\Media                         $media
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function featureImage(Media $media, Request $request): JsonResponse
-    {
-        $trick = $media->getTrick();
-        $trick->resetFeaturedImg();
-
-        $data = json_decode($request->getContent(), true);
-
-        if ($this->isCsrfTokenValid('feature'.$media->getId(), $data['_token'])) {
-            $media->setFeaturedImg(true);
-            $trick->setUpdatedAt();
-
-            $eman = $this->getDoctrine()->getManager();
-            $eman->flush();
-            $eman->persist($media);
-
-            return new JsonResponse(['success' => 1]);
-        }
-        return new JsonResponse(['error' => 'Token Invalide'], 400);
     }
 }

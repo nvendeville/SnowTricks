@@ -22,72 +22,75 @@
     </head>
 
     <body>
+        <div class="site">
+            <header class="header dis-flex">
+                <nav class="navbar width-100 navbar-expand-lg navbar-light border-gray py-2 bg-light">
+                    <div class="container width-100 no-margin">
+                        <button class="navbar-toggler navbar-toggler-right mx-auto border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                        <div class="collapse navbar-collapse width-100 justify-content-between" id="navbarSupportedContent">
+                            <div>
+                            <img src="/img/logosmall.png" alt="logo SnowTricks">
+                           </div>
+                            <ul class="navbar-nav">
+                                <li class="nav-item px-1">
+                                    <a id="homeLink" class="nav-link active" href="/">Accueil</a>
+                                </li>
+                                {%  if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                    <li class="nav-item px-1">
+                                       <a class="nav-link" href="/logout">Deconnexion</a>
+                                    </li>
+                                    <li class="nav-item px-1">
+                                        <a id="newLink"  class="nav-link" href="{{ path('trick_new') }}">Nouveau Trick</a>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item px-1">
+                                        <a id="registerLink" class="nav-link" href="/register">S'inscrire</a>
+                                    </li>
+                                    <li class="nav-item px-1">
+                                        <a id="loginLink" class="nav-link" href="/login">Se connecter</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
 
-        <header class="header dis-flex">
-            <nav class="navbar width-100 navbar-expand-lg navbar-light border-gray py-2 bg-light">
-                <div class="container width-100 no-margin">
-                    <button class="navbar-toggler navbar-toggler-right mx-auto border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div id="navbarcollapse" class="collapse navbar-collapse width-100 justify-content-between" id="navbarSupportedContent">
-                        <div>
-                        <img src="/img/logosmall.png" alt="logo SnowTricks">
-                       </div>
-                        <ul class="navbar-nav">
-                            <li class="nav-item px-1">
-                                <a id="homeLink" class="nav-link active" href="/">Accueil</a>
-                            </li>
-                            {%  if is_granted('IS_AUTHENTICATED_FULLY') %}
-                                <li class="nav-item px-1">
-                                   <a class="nav-link" href="/logout">Deconnexion</a>
-                                </li>
-                                <li class="nav-item px-1">
-                                    <a id="newLink"  class="nav-link" href="{{ path('trick_new') }}">Nouveau Trick</a>
-                                </li>
-                            {% else %}
-                                <li class="nav-item px-1">
-                                    <a id="registerLink" class="nav-link" href="/register">S'inscrire</a>
-                                </li>
-                                <li class="nav-item px-1">
-                                    <a id="loginLink" class="nav-link" href="/login">Se connecter</a>
-                                </li>
-                            {% endif %}
-                        </ul>
+            {% block body %}{% endblock %}
+
+            <footer class="bg-dark py-4 mt-3">
+                <div class="container">
+                    <div class="row py-2">
+                        <div class="col-lg-4 text-center text-lg-left mb-2 mb-lg-0">
+                            <p class="small text-muted text-uppercase mb-0">&copy; copyright 2020 - all rights reserved</p>
+                        </div>
+                        <div class="col-lg-4 d-none d-lg-block text-center">
+                            <ul class="list-inline mb-0 small">
+                                <li class="list-inline-item"><a class="reset-anchor" href="#"><i class="text-lg text-secondary fab fa-facebook-f"></i></a></li>
+                                <li class="list-inline-item"><a class="reset-anchor" href="#"><i class="text-lg text-secondary fab fa-twitter"></i></a></li>
+                                <li class="list-inline-item"><a class="reset-anchor" href="#"><i class="text-lg text-secondary fab fa-instagram"></i></a></li>
+                                <li class="list-inline-item"><a class="reset-anchor" href="#"><i class="text-lg text-secondary fab fa-linkedin"></i></a></li>
+                                <li class="list-inline-item"><a class="reset-anchor" href="#"><i class="text-lg text-secondary fab fa-youtube"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 text-center text-lg-right">
+                            <p class="small text-muted text-uppercase mb-0">Template designed by <a href="https://bootstraptemple.com/p/bootstrap-travel">Bootstrap Temple</a>. </p>
+                        </div>
                     </div>
                 </div>
-            </nav>
-        </header>
+            </footer>
 
-        {% block body %}{% endblock %}
 
-        <footer class="bg-dark py-4 mt-3">
-            <div class="container">
-                <div class="row py-2">
-                    <div class="col-lg-4 text-center text-lg-left mb-2 mb-lg-0">
-                        <p class="small text-muted text-uppercase mb-0">&copy; copyright 2020 - all rights reserved</p>
-                    </div>
-                    <div class="col-lg-4 d-none d-lg-block text-center">
-                        <ul class="list-inline mb-0 small">
-                            <li class="list-inline-item"><a class="reset-anchor" href="#"><i class="text-lg text-secondary fab fa-facebook-f"></i></a></li>
-                            <li class="list-inline-item"><a class="reset-anchor" href="#"><i class="text-lg text-secondary fab fa-twitter"></i></a></li>
-                            <li class="list-inline-item"><a class="reset-anchor" href="#"><i class="text-lg text-secondary fab fa-instagram"></i></a></li>
-                            <li class="list-inline-item"><a class="reset-anchor" href="#"><i class="text-lg text-secondary fab fa-linkedin"></i></a></li>
-                            <li class="list-inline-item"><a class="reset-anchor" href="#"><i class="text-lg text-secondary fab fa-youtube"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-4 text-center text-lg-right">
-                        <p class="small text-muted text-uppercase mb-0">Template designed by <a href="https://bootstraptemple.com/p/bootstrap-travel">Bootstrap Temple</a>. </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        {% block javascripts %}
-            <script src="/jquery/jquery.min.js"></script>
-            <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-            <script src="/js/nav.js"></script>
-        {% endblock %}
+            {% block javascripts %}
+                <script src="/jquery/jquery.min.js"></script>
+                <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+                <script src="/js/nav.js"></script>
+            {% endblock %}
 
-        {% block otherScript %} {% endblock %}
+            {% block otherScript %} {% endblock %}
 
-        <!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+            <!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        </div>
     </body>
 </html>
