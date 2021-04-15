@@ -31,8 +31,11 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, string $photoDir): Response
-    {
+    public function register(
+        Request $request,
+        UserPasswordEncoderInterface $passwordEncoder,
+        string $photoDir
+    ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -54,8 +57,14 @@ class RegistrationController extends AbstractController
                 $entityManager->flush();
                 // generate a signed url and email it to the user
                 try {
-                    $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                        (new TemplatedEmail())->from(new Address('nathalievendeville466@gmail.com', 'Snowtricks Admin'))
+                    $this->emailVerifier->sendEmailConfirmation(
+                        'app_verify_email',
+                        $user,
+                        (
+                            new TemplatedEmail())->from(new Address(
+                                'nathalievendeville466@gmail.com',
+                                'Snowtricks Admin')
+                            )
                             ->to($user->getEmail())->subject('Merci de valider votre adresse mail')
                             ->htmlTemplate('registration/confirmation_email.html.twig'));
                     return $this->redirectToRoute('accueil');

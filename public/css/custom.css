@@ -1,17 +1,19 @@
 /* your styles go here */
 
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    min-height: 100vh;
+}
+
 .site {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-}
-
-.site-content {
-    flex: 1;
-}
-
-body {
-    min-height: 100vh;
+    position: relative;
 }
 .img57 {
     height: 57px;
@@ -38,10 +40,11 @@ iframe {
     border-image: unset;
 }
 footer {
-    position: fixed;
+    position: absolute;
     bottom:0;
     width: 100%;
 }
+
 #hero {
     height: 40rem;
     background: url(/img/hero3.jpg)  center center;
