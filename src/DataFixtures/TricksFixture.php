@@ -20,8 +20,8 @@ class TricksFixture extends Fixture implements DependentFixtureInterface
             $trickFixture->setSlug("slug_" . $count);
             $trickFixture->setCreatedAt(new \DateTime());
             $trickFixture->setUpdatedAt(new \DateTime());
-            $trickFixture->setCategory($this->getReference(CategoriesFixture::CATEGORY_REFERENCE . random_int (0, 5)));
-            $trickFixture->setUser($this->getReference(UsersFixture::USER_REFERENCE . random_int (0, 9)));
+            $trickFixture->setCategory($this->getReference(CategoriesFixture::CATEGORY_REFERENCE . random_int(0, 5)));
+            $trickFixture->setUser($this->getReference(UsersFixture::USER_REFERENCE . random_int(0, 9)));
 
             $this->setReference(self::TRICK_REFERENCE . $count, $trickFixture);
 

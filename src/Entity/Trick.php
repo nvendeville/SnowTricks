@@ -19,53 +19,53 @@ class Trick implements JsonSerializable
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    private ?string $description;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $slug;
+    private ?string $slug;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created_at;
+    private ?\DateTimeInterface $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updated_at;
+    private ?\DateTimeInterface $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="trick", orphanRemoval=true)
      */
-    private $comments;
+    private ArrayCollection $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tricks")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    private ?User $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="tricks")
      */
-    private $category;
+    private ?Category $category;
 
     /**
      * @ORM\OneToMany(targetEntity=Media::class, mappedBy="trick", orphanRemoval=true, cascade="all")
      */
-    private $media;
+    private ArrayCollection $media;
 
     public function __construct()
     {
@@ -116,7 +116,7 @@ class Trick implements JsonSerializable
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
     /**
@@ -124,12 +124,12 @@ class Trick implements JsonSerializable
     */
     public function setCreatedAt()
     {
-        $this->created_at = new \DateTime();
+        $this->createdAt = new \DateTime();
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
     /**
@@ -139,7 +139,7 @@ class Trick implements JsonSerializable
      */
     public function setUpdatedAt()
     {
-        $this->updated_at = new \DateTime();
+        $this->updatedAt = new \DateTime();
     }
 
     /**
@@ -229,7 +229,7 @@ class Trick implements JsonSerializable
     public function getFeaturedImg(): string
     {
         foreach ($this->getMedia() as $media) {
-            if ($media->getFeaturedImg() == 1) {
+            if ($media->getFeaturedImg()) {
                 return $media->getLink();
             }
         }
@@ -250,7 +250,7 @@ class Trick implements JsonSerializable
     {
         return [
             'category' => $this->getCategory()->getName(),
-            'slug' =>$this->slug,
+            'slug' => $this->slug,
             'name' => $this->name,
             'img' => $this->getFeaturedImg()
         ];

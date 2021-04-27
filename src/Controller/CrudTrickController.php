@@ -53,8 +53,13 @@ class CrudTrickController extends AbstractController
 
     private int $offset = 0;
 
+    /**
+     * @var \Symfony\Component\Serializer\Encoder\JsonEncoder[]
+     */
     private array $encoders;
-
+    /**
+     * @var \Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer[]
+     */
     private array $normalizers;
 
     private Serializer $serializer;
@@ -110,7 +115,7 @@ class CrudTrickController extends AbstractController
                 $trick->setSlug($slugger->slug($form->get('name')->getData()));
                 $trick->setCreatedAt();
                 $trick->setUpdatedAt();
-                if ($form->get('img')->getData()!= "") {
+                if ($form->get('img')->getData() != "") {
                     $this->setImage($form->get('img')->getData(), $photoDir, $trick);
                 }
                 if ($form->get('video')->getData() != "") {
@@ -187,15 +192,15 @@ class CrudTrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trick->resetFeaturedImg();
-            if ($form->get('img')->getData()!= "") {
+            if ($form->get('img')->getData() != "") {
                 $this->setImage($form->get('img')->getData(), $photoDir, $trick);
             }
-            if ($form->get('video')->getData()!= "") {
+            if ($form->get('video')->getData() != "") {
                 $this->setVideo($form->get('video')->getData(), $trick);
             }
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('trick_show', ['slug'=> $slug]);
+            return $this->redirectToRoute('trick_show', ['slug' => $slug]);
         }
 
         return $this->render('trick/edit.html.twig', [
@@ -209,7 +214,7 @@ class CrudTrickController extends AbstractController
      */
     public function delete(Request $request, Trick $trick): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($trick);
             $entityManager->flush();

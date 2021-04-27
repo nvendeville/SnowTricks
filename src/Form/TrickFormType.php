@@ -46,5 +46,4 @@ class TrickFormType extends AbstractType
             'data_class' => Trick::class,
         ]);
     }
-
 }

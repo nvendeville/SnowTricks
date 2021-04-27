@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CommentsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=CommentsRepository::class)
@@ -15,34 +16,34 @@ class Comment implements \JsonSerializable
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created_at;
+    private ?\DateTimeInterface $createdAt;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $description;
+    private ?string $description;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $parent_id;
+    private ?int $parentId;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    private ?User $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $trick;
+    private ?Trick $trick;
 
     public function getId(): ?int
     {
@@ -51,15 +52,16 @@ class Comment implements \JsonSerializable
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
     /**
      * @ORM\PrePersist
+     *
      */
     public function setCreatedAt()
     {
-        $this->created_at = new \DateTime();
+        $this->createdAt = new \DateTime();
     }
 
     public function getDescription(): ?string
@@ -76,12 +78,12 @@ class Comment implements \JsonSerializable
 
     public function getParentId(): ?int
     {
-        return $this->parent_id;
+        return $this->parentId;
     }
 
-    public function setParentId(?int $parent_id): self
+    public function setParentId(?int $parentId): self
     {
-        $this->parent_id = $parent_id;
+        $this->parentId = $parentId;
 
         return $this;
     }
@@ -110,11 +112,14 @@ class Comment implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize(): array
     {
         return [
             'avatar' => $this->getUser()->getAvatar(),
-            'date' => date_format($this->created_at, 'd-m-Y H:i:s'),
+            'date' => date_format($this->createdAt, 'd-m-Y H:i:s'),
             'pseudo' => $this->getUser()->getPseudo(),
             'comment' => $this->getDescription()
         ];

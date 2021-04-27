@@ -21,7 +21,7 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    private $emailVerifier;
+    private EmailVerifier $emailVerifier;
 
     public function __construct(EmailVerifier $emailVerifier)
     {
@@ -43,7 +43,8 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
-                if ($photo = $form['photo']->getData()) {
+                $photo = $form['photo']->getData();
+                if ($photo) {
                     $filename = bin2hex(random_bytes(6)) . '.' . $photo->guessExtension();
                     try {
                         $photo->move($photoDir, $filename);
@@ -63,14 +64,17 @@ class RegistrationController extends AbstractController
                         (
                             new TemplatedEmail())->from(new Address(
                                 'nathalievendeville466@gmail.com',
-                                'Snowtricks Admin')
-                            )
+                                'Snowtricks Admin'
+                            ))
                             ->to($user->getEmail())->subject('Merci de valider votre adresse mail')
-                            ->htmlTemplate('registration/confirmation_email.html.twig'));
+                            ->htmlTemplate('registration/confirmation_email.html.twig')
+                    );
                     return $this->redirectToRoute('accueil');
                 } catch (TransportException $exception) {
-                    $this->addFlash('errorEmail',
-                        'L\'email donné n\'est pas valide. Nous n\'avons pas pu vous envoyer l\'email de validation');
+                    $this->addFlash(
+                        'errorEmail',
+                        'L\'email donné n\'est pas valide. Nous n\'avons pas pu vous envoyer l\'email de validation'
+                    );
                     $entityManager->remove($user);
                     $entityManager->flush();
                 }
