@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use JsonSerializable;
 use App\Repository\TricksRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=TricksRepository::class)
@@ -39,12 +41,12 @@ class Trick implements JsonSerializable
     /**
      * @ORM\Column(type="datetime")
      */
-    private ?\DateTimeInterface $createdAt;
+    private ?DateTimeInterface $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private ?\DateTimeInterface $updatedAt;
+    private ?DateTimeInterface $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="trick", orphanRemoval=true)
@@ -114,7 +116,7 @@ class Trick implements JsonSerializable
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -124,10 +126,10 @@ class Trick implements JsonSerializable
     */
     public function setCreatedAt()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
@@ -139,7 +141,7 @@ class Trick implements JsonSerializable
      */
     public function setUpdatedAt()
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     /**
@@ -246,6 +248,9 @@ class Trick implements JsonSerializable
         return $media;
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize(): array
     {
         return [

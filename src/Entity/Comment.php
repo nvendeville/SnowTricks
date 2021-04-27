@@ -61,7 +61,7 @@ class Comment implements \JsonSerializable
      */
     public function setCreatedAt()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
     public function getDescription(): ?string

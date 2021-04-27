@@ -1,10 +1,10 @@
 $(document).ready(function () {
 
     $('#arrowsDown').click(function () {
-        $('#listingTitle').toggle(1000)
-        $("#listTricks").toggle(1000)
-        $('#divLoadmore').toggle(1000)
-        $('#divScrollToTitle').toggle(1000)
+        $("#listingTitle").toggle(1000);
+        $("#listTricks").toggle(1000);
+        $('#divLoadmore').toggle(1000);
+        $('#divScrollToTitle').toggle(1000);
         $("html, body").animate({scrollTop:$('#listingTitle').offset().top}, 1000)
     });
 
@@ -12,16 +12,16 @@ $(document).ready(function () {
         $('#listTricks').show(1000);
         $("#divLoadmore").removeClass('pt-3 pb-3')
         $.ajax({
-            url : '/',
-            type : 'GET',
+            url : "/",
+            type : "GET",
             data : 'offset=' + offset,
-            dataType : 'json',
+            dataType : "json",
             success : function (response) {
                 if (response.tricks !== "") {
-                    $('#listTricks').append(response.tricks)
+                    $('#listTricks').append(response.tricks);
                 }
                 if (response.hasMore === false) {
-                    $('#loadMore').addClass('d-none')
+                    $("#loadMore").addClass("d-none")
                 }
                 offset += 5
             }
