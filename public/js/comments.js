@@ -6,12 +6,12 @@ $(document).ready(function () {
             data : "offset=" + offset,
             dataType : "json",
             success : function (response) {
-                let comments = JSON.parse(response.comments)
+                let comments = JSON.parse(response.comments);
                 if (comments.length > 0) {
                     for (let comment of comments) {
-                        let avatar = "avatardefault.jpg"
+                        let avatar = "avatardefault.jpg";
                         if (comment.avatar) {
-                            avatar = comment.avatar
+                            avatar = comment.avatar;
                         }
                         $("<div class='container'></div>")
                             .append($("<div class='row justify-content-center f-n-w mb-2'></div>")
@@ -25,26 +25,26 @@ $(document).ready(function () {
                                     .append($("<a class='reset-anchor text-small' href='#'><i class='fas fa-share mr-2 text-primary'></i><strong>Répondre</strong></a>"))
                                 )
                             )
-                            .appendTo($("#containerComments"))
+                            .appendTo($("#containerComments"));
                     }
                 }
                 if (response.hasMore === false) {
-                    $("#loadMoreComments").addClass("d-none")
+                    $("#loadMoreComments").addClass("d-none");
                     $("#containerComments").addClass("mb-5");
                 }
-                offset += 4
+                offset += 4;
             }
         });
     };
 
     $("#loadMoreComments").click(function () {
-        $("#divLoadmoreComments").removeClass("pt-3 pb-3")
-        loadComments()
-    })
-
-    $("#scrollToTitle").click(function () {
-        $("html, body").animate({scrollTop:$("#listingTitle").offset().top}, 1000)
+        $("#divLoadmoreComments").removeClass("pt-3 pb-3");
+        loadComments();
     });
 
-    loadComments()
+    $("#scrollToTitle").click(function () {
+        $("html, body").animate({scrollTop:$("#listingTitle").offset().top}, 1000);
+    });
+
+    loadComments();
 });
