@@ -25,7 +25,7 @@ window.onload = () => {
         // on post le formulaire
         $("#trick_form").submit();
         // on renvoie false pour ne pas poster deux fois le formulaire
-        return false
+        return false;
     });
 
     // ajout de chaque image sélectionnée dans la div
@@ -75,8 +75,8 @@ window.onload = () => {
                     $(deleteLink).click(function (event) {
                         event.preventDefault();
                         fileList.splice(index,1);
-                        renderFileList()
-                    })
+                        renderFileList();
+                    });
 
                 };
                 fileReader.readAsDataURL(file);
@@ -85,7 +85,7 @@ window.onload = () => {
             }
             fileListDisplay.appendChild(fileDisplayElem);
         })
-    }
+    };
 
     // si l"image en cours est déjà sélectionnée, on l"ignore
     let isFileExist = function (file) {
@@ -141,11 +141,11 @@ window.onload = () => {
                         $(".borderFeaturedImg").removeClass("borderFeaturedImg");
                         $(".text-warning").removeClass("text-warning");
                         $("#" + this.getAttribute("data-name")).addClass("borderFeaturedImg");
-                        $(this).children(0).addClass("text-warning")
+                        $(this).children(0).addClass("text-warning");
                     } else {
-                        alert(data.error)
+                        alert(data.error);
                     }
-                }).catch(e => alert(e))
+                }).catch(e => alert(e));
             }
         })
     }
@@ -153,11 +153,11 @@ window.onload = () => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////Supprimer un média//////////////////////////////////////////////////////////////////////
 
-    let links = document.querySelectorAll("[data-delete]")
+    let links = document.querySelectorAll("[data-delete]");
 
     for (let link of links) {
         link.addEventListener("click", function (e) {
-            e.preventDefault()
+            e.preventDefault();
 
             if (confirm("Voulez-vous supprimer ce média ?")) {
                 fetch(this.getAttribute("href"), {
@@ -168,14 +168,14 @@ window.onload = () => {
                     },
                     body: JSON.stringify({"_token": this.dataset.token})
                 }).then(
-                    response => {return response.json()
+                    response => {return response.json();
                     }
                 ).then(data => {
                     if (!data.success) {
                         alert(data.error)
-                        return
+                        return;
                     }
-                    $("#" + this.getAttribute("data-name")).remove()
+                    $("#" + this.getAttribute("data-name")).remove();
                 }).catch(e => alert(e))
             }
         })
