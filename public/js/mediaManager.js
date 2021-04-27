@@ -11,11 +11,11 @@ window.onload = () => {
     try {
         getDataTransfer();
     } catch {
-        getDataTransfer = () => new ClipboardEvent('').clipboardData
+        getDataTransfer = () => new ClipboardEvent("").clipboardData
     }
 
-    let trickFormImages = document.getElementById('trick_form_img');
-    let fileListDisplay = document.getElementById('file-list-display');
+    let trickFormImages = document.getElementById("trick_form_img");
+    let fileListDisplay = document.getElementById("file-list-display");
     let fileList = [];
 
     // submit du formulaire
@@ -29,7 +29,7 @@ window.onload = () => {
     });
 
     // ajout de chaque image sélectionnée dans la div
-    trickFormImages.addEventListener('change', function (event) {
+    trickFormImages.addEventListener("change", function (event) {
         // on les intercepte
         for (let i = 0; i < trickFormImages.files.length; i++) {
             if (!isFileExist(trickFormImages.files[i])) {
@@ -46,21 +46,21 @@ window.onload = () => {
     let renderFileList = function () {
         fileListDisplay.innerHTML = "";
         fileList.forEach(function (file, index) {
-            let fileDisplayElem = document.createElement('p')
+            let fileDisplayElem = document.createElement("p")
             fileDisplayElem.setAttribute("class", "d-flex flex-row justify-content-between w40");
             let fileReader = new FileReader()
-            if (file.type.match('image')) {
+            if (file.type.match("image")) {
                 fileReader.onload = function () {
-                    let thumbnail = document.createElement('img')
+                    let thumbnail = document.createElement("img")
                     thumbnail.setAttribute("class", "float-left")
                     thumbnail.src = fileReader.result
                     thumbnail.height = 50;
 
-                    let imageName = document.createElement('span');
+                    let imageName = document.createElement("span");
                     imageName.innerHTML = file.name;
                     imageName.setAttribute("class", "d-block mt-auto mb-auto")
 
-                    let deleteLink = document.createElement('a')
+                    let deleteLink = document.createElement("a")
                     let trash = document.createElement("i")
                     trash.setAttribute("class", "fas fa-trash-alt");
                     deleteLink.appendChild(trash);
@@ -81,13 +81,13 @@ window.onload = () => {
                 }
                 fileReader.readAsDataURL(file)
             } else {
-                alert('le fichier : ' + file.name + " n'est pas une image")
+                alert("le fichier : " + file.name + " n\'est pas une image")
             }
             fileListDisplay.appendChild(fileDisplayElem)
         })
     }
 
-    // si l'image en cours est déjà sélectionnée, on l'ignore
+    // si l"image en cours est déjà sélectionnée, on l"ignore
     let isFileExist = function (file) {
         let exist = false
         fileList.forEach(function (exitingFile) {
@@ -98,7 +98,7 @@ window.onload = () => {
         return exist
     }
 
-    // création de la liste d'images à uploader par rapport aux sélectionnées
+    // création de la liste d"images à uploader par rapport aux sélectionnées
     let createFileList = function () {
         const files = concat.apply([], arguments)
         let index = 0
@@ -138,10 +138,10 @@ window.onload = () => {
                     }
                 ).then(data => {
                     if (data.success) {
-                        $(".borderFeaturedImg").removeClass('borderFeaturedImg')
-                        $(".text-warning").removeClass('text-warning')
-                        $('#' + this.getAttribute("data-name")).addClass('borderFeaturedImg')
-                        $(this).children(0).addClass('text-warning')
+                        $(".borderFeaturedImg").removeClass("borderFeaturedImg")
+                        $(".text-warning").removeClass("text-warning")
+                        $("#" + this.getAttribute("data-name")).addClass("borderFeaturedImg")
+                        $(this).children(0).addClass("text-warning")
                     } else {
                         alert(data.error)
                     }
@@ -175,7 +175,7 @@ window.onload = () => {
                         alert(data.error)
                         return
                     }
-                    $('#' + this.getAttribute("data-name")).remove()
+                    $("#" + this.getAttribute("data-name")).remove()
                 }).catch(e => alert(e))
             }
         })
