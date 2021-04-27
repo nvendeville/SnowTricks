@@ -11,7 +11,7 @@ window.onload = () => {
     try {
         getDataTransfer();
     } catch {
-        getDataTransfer = () => new ClipboardEvent("").clipboardData
+        getDataTransfer = () => new ClipboardEvent("").clipboardData;
     }
 
     let trickFormImages = document.getElementById("trick_form_img");
@@ -23,7 +23,7 @@ window.onload = () => {
         // on récupère les images à uploader dans le multi-select
         trickFormImages.files = createFileList(fileList);
         // on post le formulaire
-        $("#trick_form").submit()
+        $("#trick_form").submit();
         // on renvoie false pour ne pas poster deux fois le formulaire
         return false
     });
@@ -38,90 +38,90 @@ window.onload = () => {
             }
         }
         // on supprime tout ce qui se trouve sur le multi-select
-        trickFormImages.value = ""
-        renderFileList()
-    })
+        trickFormImages.value = "";
+        renderFileList();
+    });
 
     //création du container des images sélectionnées
     let renderFileList = function () {
         fileListDisplay.innerHTML = "";
         fileList.forEach(function (file, index) {
-            let fileDisplayElem = document.createElement("p")
+            let fileDisplayElem = document.createElement("p");
             fileDisplayElem.setAttribute("class", "d-flex flex-row justify-content-between w40");
-            let fileReader = new FileReader()
+            let fileReader = new FileReader();
             if (file.type.match("image")) {
                 fileReader.onload = function () {
-                    let thumbnail = document.createElement("img")
-                    thumbnail.setAttribute("class", "float-left")
-                    thumbnail.src = fileReader.result
+                    let thumbnail = document.createElement("img");
+                    thumbnail.setAttribute("class", "float-left");
+                    thumbnail.src = fileReader.result;
                     thumbnail.height = 50;
 
                     let imageName = document.createElement("span");
                     imageName.innerHTML = file.name;
-                    imageName.setAttribute("class", "d-block mt-auto mb-auto")
+                    imageName.setAttribute("class", "d-block mt-auto mb-auto");
 
-                    let deleteLink = document.createElement("a")
-                    let trash = document.createElement("i")
+                    let deleteLink = document.createElement("a");
+                    let trash = document.createElement("i");
                     trash.setAttribute("class", "fas fa-trash-alt");
                     deleteLink.appendChild(trash);
-                    deleteLink.setAttribute("class", "d-block mt-auto mb-auto")
-                    deleteLink.setAttribute("id", file.name)
-                    deleteLink.setAttribute("href", "#")
+                    deleteLink.setAttribute("class", "d-block mt-auto mb-auto");
+                    deleteLink.setAttribute("id", file.name);
+                    deleteLink.setAttribute("href", "#");
 
-                    fileDisplayElem.appendChild(thumbnail)
-                    fileDisplayElem.appendChild(imageName)
-                    fileDisplayElem.appendChild(deleteLink)
+                    fileDisplayElem.appendChild(thumbnail);
+                    fileDisplayElem.appendChild(imageName);
+                    fileDisplayElem.appendChild(deleteLink);
 
                     $(deleteLink).click(function (event) {
-                        event.preventDefault()
-                        fileList.splice(index,1)
+                        event.preventDefault();
+                        fileList.splice(index,1);
                         renderFileList()
                     })
 
-                }
-                fileReader.readAsDataURL(file)
+                };
+                fileReader.readAsDataURL(file);
             } else {
-                alert("le fichier : " + file.name + " n\'est pas une image")
+                alert("le fichier : " + file.name + " n\'est pas une image");
             }
-            fileListDisplay.appendChild(fileDisplayElem)
+            fileListDisplay.appendChild(fileDisplayElem);
         })
     }
 
     // si l"image en cours est déjà sélectionnée, on l"ignore
     let isFileExist = function (file) {
-        let exist = false
+        let exist = false;
         fileList.forEach(function (exitingFile) {
             if (exitingFile.name === file.name) {
-                exist = true
+                exist = true;
             }
         })
-        return exist
+        return exist;
     }
 
     // création de la liste d"images à uploader par rapport aux sélectionnées
     let createFileList = function () {
-        const files = concat.apply([], arguments)
-        let index = 0
-        const {length} = files
+        const files = concat.apply([], arguments);
+        let index = 0;
+        const {length} = files;
 
-        const dataTransfer = getDataTransfer()
+        const dataTransfer = getDataTransfer();
 
         for (; index < length; index++) {
-            dataTransfer.items.add(files[index])
+            dataTransfer.items.add(files[index]);
         }
-        return dataTransfer.files
+        return dataTransfer.files;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////Mettre une image à la une//////////////////////////////////////////////////////////////////////
 
-    let featuredImgs = document.querySelectorAll("[data-feature]")
+    let featuredImgs = document.querySelectorAll("[data-feature]");
 
     for (let featuredImg of featuredImgs) {
         // On écoute le clic
         featuredImg.addEventListener("click", function (e) {
             // On empêche la navigation
-            e.preventDefault()
+            e.preventDefault();
 
             if (confirm("Voulez-vous mettre cette image à la une ?")) {
                 // On envoie une requête Ajax vers le href du lien avec la méthode PATCH
@@ -134,13 +134,13 @@ window.onload = () => {
                     body: JSON.stringify({"_token": this.dataset.token})
                 }).then(
                     // On récupère la réponse en JSON
-                    response => {return response.json()
+                    response => {return response.json();
                     }
                 ).then(data => {
                     if (data.success) {
-                        $(".borderFeaturedImg").removeClass("borderFeaturedImg")
-                        $(".text-warning").removeClass("text-warning")
-                        $("#" + this.getAttribute("data-name")).addClass("borderFeaturedImg")
+                        $(".borderFeaturedImg").removeClass("borderFeaturedImg");
+                        $(".text-warning").removeClass("text-warning");
+                        $("#" + this.getAttribute("data-name")).addClass("borderFeaturedImg");
                         $(this).children(0).addClass("text-warning")
                     } else {
                         alert(data.error)
