@@ -15,28 +15,28 @@ class Media
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $featured_img;
+    private ?bool $featuredImg;
 
     /**
      * @ORM\Column(type="text", length=65535)
      */
-    private $link;
+    private ?string $link;
 
     /**
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="media")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $trick;
+    private ?Trick $trick;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $type;
+    private ?string $type;
 
     /**
      * Constructor
@@ -55,12 +55,12 @@ class Media
 
     public function getFeaturedImg(): ?bool
     {
-        return $this->featured_img;
+        return $this->featuredImg;
     }
 
-    public function setFeaturedImg(bool $featured_img): self
+    public function setFeaturedImg(bool $featuredImg): self
     {
-        $this->featured_img = $featured_img;
+        $this->featuredImg = $featuredImg;
 
         return $this;
     }

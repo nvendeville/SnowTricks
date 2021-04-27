@@ -22,10 +22,10 @@ class MediaController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if ($this->isCsrfTokenValid('delete'.$media->getId(), $data['_token'])) {
+        if ($this->isCsrfTokenValid('delete' . $media->getId(), $data['_token'])) {
             $link = $media->getLink();
             if ($media->getType() == "image") {
-                unlink($photoDir.'/'.$link);
+                unlink($photoDir . '/' . $link);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -51,7 +51,7 @@ class MediaController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        if ($this->isCsrfTokenValid('feature'.$media->getId(), $data['_token'])) {
+        if ($this->isCsrfTokenValid('feature' . $media->getId(), $data['_token'])) {
             $media->setFeaturedImg(true);
             $trick->setUpdatedAt();
 

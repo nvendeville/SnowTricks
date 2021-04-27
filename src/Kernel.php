@@ -11,28 +11,30 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    protected string $path = '\dirname(__DIR__)';
+
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->import('../config/{packages}/*.yaml');
-        $container->import('../config/{packages}/'.$this->environment.'/*.yaml');
+        $container->import('../config/{packages}/' . $this->environment . '/*.yaml');
 
-        if (is_file(\dirname(__DIR__).'/config/services.yaml')) {
+        if (is_file($this->path . '/config/services.yaml')) {
             $container->import('../config/services.yaml');
-            $container->import('../config/{services}_'.$this->environment.'.yaml');
-        } elseif (is_file($path = \dirname(__DIR__).'/config/services.php')) {
-            (require $path)($container->withPath($path), $this);
+            $container->import('../config/{services}_' . $this->environment . '.yaml');
+        } elseif (is_file($this->path . '/config/services.php')) {
+            (require $this->path)($container->withPath($this->path), $this);
         }
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import('../config/{routes}/'.$this->environment.'/*.yaml');
+        $routes->import('../config/{routes}/' . $this->environment . '/*.yaml');
         $routes->import('../config/{routes}/*.yaml');
 
-        if (is_file(\dirname(__DIR__).'/config/routes.yaml')) {
+        if (is_file($this->path . '/config/routes.yaml')) {
             $routes->import('../config/routes.yaml');
-        } elseif (is_file($path = \dirname(__DIR__).'/config/routes.php')) {
-            (require $path)($routes->withPath($path), $this);
+        } elseif (is_file($this->path . '/config/routes.php')) {
+            (require $this->path)($routes->withPath($this->path), $this);
         }
     }
 }

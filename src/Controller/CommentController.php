@@ -23,11 +23,16 @@ class CommentController extends AbstractController
 
     private CommentsRepository $commentsRepository;
     private TricksRepository $tricksRepository;
-    private int $offset = 0;
     private int $limit = 4;
     private Serializer $serializer;
-    private array $normalizers;
+    /**
+     * @var \Symfony\Component\Serializer\Encoder\JsonEncoder[]
+     */
     private array $encoders;
+    /**
+     * @var \Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer[]
+     */
+    private array $normalizers;
 
     /**
      * CommentController constructor.
@@ -56,20 +61,20 @@ class CommentController extends AbstractController
     public function getComments(string $slug, Request $request): Response
     {
 
-        $this->offset = $request->query->getInt('offset');
+        $offset = $request->query->getInt('offset');
 
         $comments = $this->commentsRepository->findBy(
             ['trick' => $this->tricksRepository->findOneBy(['slug' => $slug])],
             ['created_at' => 'desc'],
             $this->limit,
-            $this->offset
+            $offset
         );
 
         $hasMore = $this->hasMore(
             $this->commentsRepository,
             count($comments),
             $this->limit,
-            $this->offset + $this->limit
+            $offset + $this->limit
         );
 
         return new JsonResponse([

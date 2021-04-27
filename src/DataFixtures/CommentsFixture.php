@@ -7,6 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
+
 class CommentsFixture extends Fixture implements DependentFixtureInterface
 {
 
@@ -16,8 +17,8 @@ class CommentsFixture extends Fixture implements DependentFixtureInterface
             $commentFixture = new Comment();
             $commentFixture->setDescription("Commentaire fictif " . $count);
             $commentFixture->setCreatedAt(new \DateTime());
-            $commentFixture->setUser($this->getReference(UsersFixture::USER_REFERENCE . random_int (0, 9)));
-            $commentFixture->setTrick($this->getReference(TricksFixture::TRICK_REFERENCE . random_int (0, 19)));
+            $commentFixture->setUser($this->getReference(UsersFixture::USER_REFERENCE . random_int(0, 9)));
+            $commentFixture->setTrick($this->getReference(TricksFixture::TRICK_REFERENCE . random_int(0, 19)));
             $commentFixture->setParentId(random_int(0, 79));
 
             $manager->persist($commentFixture);
