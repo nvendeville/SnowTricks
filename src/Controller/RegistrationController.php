@@ -79,7 +79,7 @@ class RegistrationController extends AbstractController
                     $entityManager->flush();
                 }
             } catch (UniqueConstraintViolationException $exception) {
-                $this->addFlash('error', 'Ce pseudo a déjà été utilisé');
+                $this->addFlash('errorPseudo', 'Ce pseudo a déjà été utilisé');
             }
         }
 

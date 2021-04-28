@@ -18,7 +18,7 @@
                 {% for message in app.flashes('errorEmail') %}
                     <div class="alert alert-danger" role="alert">{{ message }}</div>
                 {% endfor %}
-                {% for message in app.flashes('error') %}
+                {% for message in app.flashes('errorPseudo') %}
                     <div class="alert alert-danger">
                 {{ message }}
         </div>

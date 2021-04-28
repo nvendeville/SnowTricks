@@ -84,7 +84,7 @@ window.onload = () => {
                 alert("le fichier : " + file.name + " n\'est pas une image");
             }
             fileListDisplay.appendChild(fileDisplayElem);
-        })
+        });
     };
 
     // si l"image en cours est déjà sélectionnée, on l"ignore
@@ -145,7 +145,7 @@ window.onload = () => {
                     } else {
                         alert(data.error);
                     }
-                }).catch(e => alert(e));
+                }).catch((e) => alert(e));
             }
         })
     }
@@ -172,7 +172,7 @@ window.onload = () => {
                     }
                 ).then(data => {
                     if (!data.success) {
-                        alert(data.error)
+                        alert(data.error);
                         return;
                     }
                     $("#" + this.getAttribute("data-name")).remove();
