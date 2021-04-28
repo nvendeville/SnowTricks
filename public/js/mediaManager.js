@@ -96,7 +96,7 @@ window.onload = () => {
             }
         })
         return exist;
-    }
+    };
 
     // création de la liste d"images à uploader par rapport aux sélectionnées
     let createFileList = function () {
@@ -134,9 +134,9 @@ window.onload = () => {
                     body: JSON.stringify({"_token": this.dataset.token})
                 }).then(
                     // On récupère la réponse en JSON
-                    response => {return response.json();
+                    (response) => {return response.json();
                     }
-                ).then(data => {
+                ).then((data) => {
                     if (data.success) {
                         $(".borderFeaturedImg").removeClass("borderFeaturedImg");
                         $(".text-warning").removeClass("text-warning");
@@ -176,7 +176,7 @@ window.onload = () => {
                         return;
                     }
                     $("#" + this.getAttribute("data-name")).remove();
-                }).catch(e => alert(e))
+                }).catch((e) => alert(e));
             }
         })
     }
