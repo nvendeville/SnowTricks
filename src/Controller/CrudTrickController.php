@@ -154,8 +154,14 @@ class CrudTrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setUser($this->getUser());
             $comment->setCreatedAt();
+            $comment->setUpdatedAt();
             $comment->setTrick($trick);
-
+            if ($comment->getParentId()) {
+                $parentComment = $this->commentsRepository->find($comment->getParentId());
+                $parentComment->setUpdatedAt();
+                $this->entityManager->persist($parentComment);
+                $this->entityManager->flush();
+            }
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
 
@@ -165,10 +171,6 @@ class CrudTrickController extends AbstractController
             );
         }
 
-        $form_array = [];
-        foreach ($trick->getComments() as $trick_comment) {
-            $form_array['comment_form' . $trick_comment->getId()] = $form->createView();
-        }
 
         return $this->render(
             'trick/index.html.twig',
@@ -176,8 +178,7 @@ class CrudTrickController extends AbstractController
             'trick' => $trick,
             'offset' => $this->offset,
             'comment_form' => $form->createView(),
-            'featuredImg' => $trick->getFeaturedImg(),
-            'comment_forms' => $form_array
+            'featuredImg' => $trick->getFeaturedImg()
             ]
         );
     }

@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
+use App\Form\CommentFormType;
 use App\Repository\CommentsRepository;
 use App\Repository\TricksRepository;
 use App\Service\HasMore;
@@ -64,11 +66,19 @@ class CommentController extends AbstractController
         $offset = $request->query->getInt('offset');
 
         $comments = $this->commentsRepository->findBy(
-            ['trick' => $this->tricksRepository->findOneBy(['slug' => $slug])],
-            ['created_at' => 'desc'],
+            ['trick' => $this->tricksRepository->findOneBy(['slug' => $slug]), 'parentId' => null],
+            ['updatedAt' => 'desc'],
             $this->limit,
             $offset
         );
+        $answers = [];
+        foreach ($comments as $comment) {
+            $answer = $this->commentsRepository->findBy(
+                ['parentId' => $comment->getId()],
+                ['updatedAt' => 'desc']
+            );
+            $answers[$comment->getId()] = $answer;
+        }
 
         $hasMore = $this->hasMore(
             $this->commentsRepository,
@@ -76,10 +86,25 @@ class CommentController extends AbstractController
             $this->limit,
             $offset + $this->limit
         );
+        $comment = new Comment();
+        $form = $this->createForm(CommentFormType::class, $comment);
 
-        return new JsonResponse([
-            'comments' => $this->serializer->serialize($comments, 'json'),
+        $formArray = [];
+        foreach ($comments as $trick_comment) {
+            $formArray['comment_form' . $trick_comment->getId()] = $form->createView();
+        }
+        $response = [
+            'comments' => $this->render(
+                'trick/_listComments.html.twig',
+                [
+                    'comments' => $comments,
+                    'answers' => $answers,
+                    'comment_forms' => $formArray
+                ]
+            )->getContent(),
             'hasMore' => $hasMore
-        ]);
+
+        ];
+        return new JsonResponse($response);
     }
 }
