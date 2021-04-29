@@ -165,13 +165,19 @@ class CrudTrickController extends AbstractController
             );
         }
 
+        $form_array = [];
+        foreach ($trick->getComments() as $trick_comment) {
+            $form_array['comment_form' . $trick_comment->getId()] = $form->createView();
+        }
+
         return $this->render(
             'trick/index.html.twig',
             [
             'trick' => $trick,
             'offset' => $this->offset,
             'comment_form' => $form->createView(),
-            'featuredImg' => $trick->getFeaturedImg()
+            'featuredImg' => $trick->getFeaturedImg(),
+            'comment_forms' => $form_array
             ]
         );
     }
