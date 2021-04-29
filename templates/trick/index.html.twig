@@ -113,7 +113,6 @@
         <h3 class="border-top h4 mb-5 d-flex col-lg-12 align-items-center"><span>Commentaires</span><span class="ml-3 text-gray">{{ count }}</span></h3>
 
         <div id="containerComments" class="d-flex pr-3 pl-3 flex-column">
-            {{ include('trick/_listComments.html.twig') }}
         </div>
 
 
@@ -131,8 +130,8 @@
 
 {% block otherScript %}
     <script>
-        let offset = {{ offset }}
-        let slug = '{{ trick.slug }}'
+        let offset = {{ offset }};
+        let slug = '{{ trick.slug }}';
     </script>
     <script src="/js/comments.js"></script>
 {% endblock %}

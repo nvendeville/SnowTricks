@@ -1,37 +1,54 @@
-{% set avatar = 'avatardefault.jpg' %}
-{% for comment in trick.comments %}
+{% for comment in comments %}
+    {% set avatar = 'avatardefault.jpg' %}
     {% if comment.user.avatar != '' %}
         {% set avatar = comment.user.avatar %}
     {% endif %}
 <div class="container">
     <div class="row justify-content-center f-n-w mb-2">
-        <img class="img57 rounded-circle align-self-center shadow-sm img-fluid img-thumbnail" src="/img/avatar0.jpg">
-        <div class="col-lg-5 ml-2 card radius width17 padding-card">
+        <img class="img57 rounded-circle align-self-center shadow-sm img-fluid img-thumbnail" src="/img/{{ avatar }}">
+        <div class="col-lg-8 ml-2 card radius width17 padding-card">
             <p class="small mb-0 text-primary">{{ comment.createdAt | format_datetime('medium', 'short', locale='fr')  }}</p>
             <h5>{{ comment.user.pseudo }}</h5>
             <p class="text-muted text-small text-left">{{ comment.description }}</p>
-            <a type="button" data-toggle="collapse" data-target="#answerComment{{ comment.id }}" class="reset-anchor text-small" href="#">
-                <i class="fas fa-share mr-2 text-primary"></i>
-                <strong>Répondre</strong>
-            </a>
-            <div id="answerComment{{ comment.id }}" class="card">
-                {% for comment_form in comment_forms %}
-                    {{ form_start(comment_form) }}
-                    <div class="container">
-                        <div class="row">
-                            <div class="mb-5 justify-content-center row m-l-r m-t-b col-lg-12">
-                                <div class="col-lg-7">
-                                    {{ form_widget(comment_form.description, {'attr': { 'class': 'form-control radius', 'name': 'message', 'rows': '5', 'placeholder': 'Ecrivez votre message ici'}}) }}
-                                </div>
-                                <div class="form-group text-center margin-auto m-l-r m-t-b col-lg-2">
-                                    <button class="btn btn-dark" type="submit">Envoyer</button>
-                                </div>
-                            </div>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a data-toggle="collapse" class="mb-2 reset-anchor text-small" href="#answerComment{{ comment.id }}" role="button" aria-expanded="false" aria-controls="#answerComment{{ comment.id }}">
+                    <i class="fas fa-share mr-2 text-primary"></i>
+                    <strong>Répondre</strong>
+                </a>
+                <div id="answerComment{{ comment.id }}" class="collapse">
+                    {% set form_name = 'comment_form' ~ comment.id %}
+                    {{ form_start(comment_forms[form_name]) }}
+                    <div class="col-lg-12 row no-margin">
+                        <div class="col-lg-8 no-padding ml-2">
+                            {{ form_widget(comment_forms[form_name].description, {'attr': { 'class': 'form-control radius mb-2', 'name': 'answer', 'rows': '1', 'placeholder': 'Ecrivez votre réponse'}}) }}
+                            {{ form_widget(comment_forms[form_name].parentId, {'attr': { 'value': comment.id }}) }}
+                        </div>
+                        <div class="col-lg-3 margin-auto">
+                            <button class="btn btn-dark" type="submit">Envoyer</button>
                         </div>
                     </div>
-                    {{ form_end(comment_form) }}
+                    {{ form_end(comment_forms[form_name]) }}
+                </div>
+            {% endif %}
+            {% if answers[comment.id] %}
+                {% for answer in answers[comment.id] %}
+                    {% set avatarAnswer = 'avatardefault.jpg' %}
+                    {% if answer.user.avatar != '' %}
+                        {% set avatarAnswer = answer.user.avatar %}
+                    {% endif %}
+                <div class="container">
+                    <div class="row justify-content-center f-n-w mb-2">
+                        <img class="img57 rounded-circle align-self-center shadow-sm img-fluid img-thumbnail" src="/img/{{ avatarAnswer }}">
+                        <div class="col-lg-8 ml-2 card radius width17 padding-card">
+                            <p class="small mb-0 text-primary">{{ answer.createdAt | format_datetime('medium', 'short', locale='fr')  }}</p>
+                            <h5>{{ answer.user.pseudo }}</h5>
+                            <p class="text-muted text-small text-left">{{ answer.description }}</p>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
-            </div>
+            {% endif %}
+
         </div>
     </div>
 </div>

@@ -45,6 +45,11 @@ class Comment implements \JsonSerializable
      */
     private $trick;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,5 +128,20 @@ class Comment implements \JsonSerializable
             'pseudo' => $this->getUser()->getPseudo(),
             'comment' => $this->getDescription()
         ];
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     *
+     */
+    public function setUpdatedAt()
+    {
+        $this->updatedAt = new DateTime();
     }
 }
