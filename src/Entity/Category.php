@@ -17,17 +17,17 @@ class Category
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private int $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private ?string $name;
+    private $name;
 
     /**
      * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="category")
      */
-    private ArrayCollection $tricks;
+    private $tricks;
 
     public function __construct()
     {

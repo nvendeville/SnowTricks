@@ -20,48 +20,48 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private int $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private ?string $email;
+    private $email;
 
     /**
      * @ORM\Column(type="json")
      */
-    private array $roles = [];
+    private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private string $password;
+    private $password;
 
     /**
      * @ORM\Column(type="string", length=255,  unique=true)
      */
-    private ?string $pseudo;
+    private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private ?string $avatar;
+    private $avatar;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="user", orphanRemoval=true)
      */
-    private ArrayCollection $comments;
+    private $comments;
 
     /**
      * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="user", orphanRemoval=true)
      */
-    private ArrayCollection $tricks;
+    private $tricks;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $isVerified = false;
+    private $isVerified = false;
 
     public function __construct()
     {

@@ -16,34 +16,34 @@ class Comment implements \JsonSerializable
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private int $id;
+    private $id;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="created_at")
      */
-    private ?\DateTimeInterface $createdAt;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="text")
      */
-    private ?string $description;
+    private $description;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private ?int $parentId;
+    private $parentId;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?User $user;
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?Trick $trick;
+    private $trick;
 
     public function getId(): ?int
     {

@@ -84,7 +84,7 @@ class MainController extends AbstractController
             $this->offset = $request->query->getInt('offset');
         }
 
-        $tricks = $this->tricksRepository->findBy([], ['created_at' => 'desc'], $this->limit, $this->offset);
+        $tricks = $this->tricksRepository->findBy([], ['createdAt' => 'desc'], $this->limit, $this->offset);
         $hasMore = $this->hasMore($this->tricksRepository, count($tricks), $this->limit, $this->offset + $this->limit);
 
         if ($isAjax) {

@@ -11,7 +11,13 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-    protected string $path = '\dirname(__DIR__)';
+    private string $path;
+
+    public function __construct(string $environment, bool $debug)
+    {
+        parent::__construct($environment, $debug);
+        $this->path = \dirname(__DIR__);
+    }
 
     protected function configureContainer(ContainerConfigurator $container): void
     {

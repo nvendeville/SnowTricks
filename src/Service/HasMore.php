@@ -13,7 +13,7 @@ trait HasMore
             return false;
         }
 
-        $result = $repository->findBy([], ['created_at' => 'desc'], $limit, $offset);
+        $result = $repository->findBy([], ['createdAt' => 'desc'], $limit, $offset);
         return count($result) >= 1;
     }
 }

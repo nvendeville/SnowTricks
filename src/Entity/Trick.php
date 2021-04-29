@@ -21,53 +21,53 @@ class Trick implements JsonSerializable
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private int $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
-    private ?string $name;
+    private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private ?string $description;
+    private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private ?string $slug;
+    private $slug;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="created_at")
      */
-    private ?DateTimeInterface $createdAt;
+    private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="updated_at")
      */
-    private ?DateTimeInterface $updatedAt;
+    private $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="trick", orphanRemoval=true)
      */
-    private ArrayCollection $comments;
+    private $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tricks")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?User $user;
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="tricks")
      */
-    private ?Category $category;
+    private $category;
 
     /**
      * @ORM\OneToMany(targetEntity=Media::class, mappedBy="trick", orphanRemoval=true, cascade="all")
      */
-    private ArrayCollection $media;
+    private $media;
 
     public function __construct()
     {

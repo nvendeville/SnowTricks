@@ -15,28 +15,28 @@ class Media
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private int $id;
+    private $id;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private ?bool $featuredImg;
+    private $featuredImg;
 
     /**
      * @ORM\Column(type="text", length=65535)
      */
-    private ?string $link;
+    private $link;
 
     /**
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="media")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?Trick $trick;
+    private $trick;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private ?string $type;
+    private $type;
 
     /**
      * Constructor

@@ -11,6 +11,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\FileValidator;
+use Symfony\Component\Validator\Constraints\ImageValidator;
 
 class RegistrationFormType extends AbstractType
 {
@@ -25,7 +27,7 @@ class RegistrationFormType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'constraints' => [
-                    new Symfony\Component\Validator\Constraints\Image(['maxSize' => '1024k']),
+                    new ImageValidator(),
                 ]
             ])
 

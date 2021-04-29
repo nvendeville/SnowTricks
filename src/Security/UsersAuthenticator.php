@@ -43,13 +43,13 @@ class UsersAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
         return self::LOGIN_ROUTE === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
-    public function getCredentials(Request $request)
+    public function getCredentials(Request $request): array
     {
         $credentials = [
             'email' => $request->request->get('email'),
@@ -64,7 +64,7 @@ class UsersAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         return $credentials;
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUser($credentials, UserProviderInterface $userProvider): object
     {
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
@@ -81,7 +81,7 @@ class UsersAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         return $user;
     }
 
-    public function checkCredentials($credentials, UserInterface $user)
+    public function checkCredentials($credentials, UserInterface $user): bool
     {
         if ($this->passwordEncoder->isPasswordValid($user, $credentials['password']) == false) {
             throw new CustomUserMessageAuthenticationException('Identifiant ou mot de passe invalide');
@@ -92,12 +92,12 @@ class UsersAuthenticator extends AbstractFormLoginAuthenticator implements Passw
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
-    public function getPassword($credentials): ?string
+    public function getPassword($credentials): string
     {
         return $credentials['password'];
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): string
     {
         if ($this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($this->getTargetPath($request->getSession(), $providerKey));
@@ -110,7 +110,7 @@ class UsersAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         return new RedirectResponse($this->urlGenerator->generate('accueil'));
     }
 
-    protected function getLoginUrl()
+    protected function getLoginUrl(): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
