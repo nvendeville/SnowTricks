@@ -16,7 +16,7 @@ $(document).ready(function () {
             type : "GET",
             data : "offset=" + offset,
             dataType : "json",
-            success : response => {
+            success : (response) => {
                 if (response.tricks !== "") {
                     $("#listTricks").append(response.tricks);
                 }
