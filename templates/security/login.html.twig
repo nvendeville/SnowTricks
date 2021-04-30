@@ -5,6 +5,10 @@
 {% block body %}
     <h1 class="text-center mb-5 mt-5">Connectez-vous</h1>
 
+    {% for flashError in app.flashes('errorIsverified') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
     <div class="container">
         <div class="row">
             <div class="mb-5 padding-12 width-100 justify-content-center col-lg-12">
