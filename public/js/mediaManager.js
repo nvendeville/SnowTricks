@@ -14,6 +14,10 @@ window.onload = () => {
         getDataTransfer = () => new ClipboardEvent("").clipboardData;
     }
 
+    let trickFormImages = document.getElementById("trick_form_img");
+    let fileListDisplay = document.getElementById("file-list-display");
+    let fileList = [];
+
     // si l"image en cours est déjà sélectionnée, on l"ignore
     let isFileExist = function (file) {
         let exist = false;
@@ -84,10 +88,6 @@ window.onload = () => {
         });
     };
 
-    let trickFormImages = document.getElementById("trick_form_img");
-    let fileListDisplay = document.getElementById("file-list-display");
-    let fileList = [];
-
     // submit du formulaire
     $("#trick_form_submit_button").click(function () {
         // on récupère les images à uploader dans le multi-select
@@ -148,7 +148,7 @@ for (let featuredImg of featuredImgs) {
                 }).catch((e) => alert(e));
         }
     });
-};
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////Supprimer un média//////////////////////////////////////////////////////////////////////
