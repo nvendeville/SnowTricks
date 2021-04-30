@@ -14,33 +14,30 @@ window.onload = () => {
         getDataTransfer = () => new ClipboardEvent("").clipboardData;
     }
 
-    let trickFormImages = document.getElementById("trick_form_img");
-    let fileListDisplay = document.getElementById("file-list-display");
-    let fileList = [];
-
-    // submit du formulaire
-    $("#trick_form_submit_button").click(function () {
-        // on récupère les images à uploader dans le multi-select
-        trickFormImages.files = createFileList(fileList);
-        // on post le formulaire
-        $("#trick_form").submit();
-        // on renvoie false pour ne pas poster deux fois le formulaire
-        return false;
-    });
-
-    // ajout de chaque image sélectionnée dans la div
-    trickFormImages.addEventListener("change", function (event) {
-        // on les intercepte
-        for (let i = 0; i < trickFormImages.files.length; i++) {
-            if (!isFileExist(trickFormImages.files[i])) {
-                // et on les met dans notre tableau (cf : ligne supérieure 73)
-                fileList.push(trickFormImages.files[i]);
+    // si l"image en cours est déjà sélectionnée, on l"ignore
+    let isFileExist = function (file) {
+        let exist = false;
+        fileList.forEach(function (exitingFile) {
+            if (exitingFile.name === file.name) {
+                exist = true;
             }
+        });
+        return exist;
+    };
+
+    // création de la liste d"images à uploader par rapport aux sélectionnées
+    let createFileList = function () {
+        const files = concat.apply([], arguments);
+        let index = 0;
+        const {length} = files;
+
+        const dataTransfer = getDataTransfer();
+
+        for (; index < length; index++) {
+            dataTransfer.items.add(files[index]);
         }
-        // on supprime tout ce qui se trouve sur le multi-select
-        trickFormImages.value = "";
-        renderFileList();
-    });
+        return dataTransfer.files;
+    };
 
     //création du container des images sélectionnées
     let renderFileList = function () {
@@ -87,53 +84,56 @@ window.onload = () => {
         });
     };
 
-    // si l"image en cours est déjà sélectionnée, on l"ignore
-    let isFileExist = function (file) {
-        let exist = false;
-        fileList.forEach(function (exitingFile) {
-            if (exitingFile.name === file.name) {
-                exist = true;
+    let trickFormImages = document.getElementById("trick_form_img");
+    let fileListDisplay = document.getElementById("file-list-display");
+    let fileList = [];
+
+    // submit du formulaire
+    $("#trick_form_submit_button").click(function () {
+        // on récupère les images à uploader dans le multi-select
+        trickFormImages.files = createFileList(fileList);
+        // on post le formulaire
+        $("#trick_form").submit();
+        // on renvoie false pour ne pas poster deux fois le formulaire
+        return false;
+    });
+
+    // ajout de chaque image sélectionnée dans la div
+    trickFormImages.addEventListener("change", function (event) {
+        // on les intercepte
+        for (let i = 0; i < trickFormImages.files.length; i++) {
+            if (!isFileExist(trickFormImages.files[i])) {
+                // et on les met dans notre tableau (cf : ligne supérieure 73)
+                fileList.push(trickFormImages.files[i]);
             }
-        });
-        return exist;
-    };
-
-    // création de la liste d"images à uploader par rapport aux sélectionnées
-    let createFileList = function () {
-        const files = concat.apply([], arguments);
-        let index = 0;
-        const {length} = files;
-
-        const dataTransfer = getDataTransfer();
-
-        for (; index < length; index++) {
-            dataTransfer.items.add(files[index]);
         }
-        return dataTransfer.files;
-    };
+        // on supprime tout ce qui se trouve sur le multi-select
+        trickFormImages.value = "";
+        renderFileList();
+    });
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////Mettre une image à la une//////////////////////////////////////////////////////////////////////
 
     let featuredImgs = document.querySelectorAll("[data-feature]");
 
-    for (let featuredImg of featuredImgs) {
-        // On écoute le clic
-        featuredImg.addEventListener("click", function (e) {
-            // On empêche la navigation
-            e.preventDefault();
+for (let featuredImg of featuredImgs) {
+    // On écoute le clic
+    featuredImg.addEventListener("click", function (e) {
+        // On empêche la navigation
+        e.preventDefault();
 
-            if (confirm("Voulez-vous mettre cette image à la une ?")) {
-                // On envoie une requête Ajax vers le href du lien avec la méthode PATCH
-                fetch(this.getAttribute("href"), {
-                    method: "PATCH",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest",
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({"_token": this.dataset.token})
+        if (confirm("Voulez-vous mettre cette image à la une ?")) {
+            // On envoie une requête Ajax vers le href du lien avec la méthode PATCH
+            fetch(this.getAttribute("href"), {
+                method: "PATCH",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"_token": this.dataset.token})
                 }).then(
-                    // On récupère la réponse en JSON
+                // On récupère la réponse en JSON
                     (response) => {return response.json();
                     }
                 ).then((data) => {
@@ -146,27 +146,27 @@ window.onload = () => {
                         alert(data.error);
                     }
                 }).catch((e) => alert(e));
-            }
-        });
-    };
+        }
+    });
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////Supprimer un média//////////////////////////////////////////////////////////////////////
 
     let links = document.querySelectorAll("[data-delete]");
 
-    for (let link of links) {
-        link.addEventListener("click", function (e) {
-            e.preventDefault();
+for (let link of links) {
+    link.addEventListener("click", function (e) {
+        e.preventDefault();
 
-            if (confirm("Voulez-vous supprimer ce média ?")) {
-                fetch(this.getAttribute("href"), {
-                    method: "DELETE",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest",
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({"_token": this.dataset.token})
+        if (confirm("Voulez-vous supprimer ce média ?")) {
+            fetch(this.getAttribute("href"), {
+                method: "DELETE",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"_token": this.dataset.token})
                 }).then(
                     (response) => {return response.json();
                     }
@@ -177,9 +177,9 @@ window.onload = () => {
                     }
                     $("#" + this.getAttribute("data-name")).remove();
                 }).catch((e) => alert(e));
-            }
-        });
-    }
+        }
+    });
+}
 };
 
 
