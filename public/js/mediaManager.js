@@ -94,7 +94,7 @@ window.onload = () => {
             if (exitingFile.name === file.name) {
                 exist = true;
             }
-        })
+        });
         return exist;
     };
 
@@ -110,7 +110,7 @@ window.onload = () => {
             dataTransfer.items.add(files[index]);
         }
         return dataTransfer.files;
-    }
+    };
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////Mettre une image à la une//////////////////////////////////////////////////////////////////////
@@ -168,9 +168,9 @@ window.onload = () => {
                     },
                     body: JSON.stringify({"_token": this.dataset.token})
                 }).then(
-                    response => {return response.json();
+                    (response) => {return response.json();
                     }
-                ).then(data => {
+                ).then((data) => {
                     if (!data.success) {
                         alert(data.error);
                         return;

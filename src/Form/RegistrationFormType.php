@@ -27,7 +27,7 @@ class RegistrationFormType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'constraints' => [
-                    new ImageValidator(),
+                    new \Symfony\Component\Validator\Constraints\Image(['maxSize' => '1024k']),
                 ]
             ])
 

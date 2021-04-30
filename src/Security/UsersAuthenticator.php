@@ -78,6 +78,12 @@ class UsersAuthenticator extends AbstractFormLoginAuthenticator implements Passw
             throw new CustomUserMessageAuthenticationException('Identifiant ou mot de passe invalide');
         }
 
+        if (!$user->isVerified()) {
+            throw new CustomUserMessageAuthenticationException(
+                'Vous n\'avez pas validé votre email. Votre connexion n\'est pas autorisée.'
+            );
+        }
+
         return $user;
     }
 

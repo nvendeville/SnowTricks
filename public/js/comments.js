@@ -5,7 +5,7 @@ $(document).ready(function () {
             type : "GET",
             data : "offset=" + offset,
             dataType : "json",
-            success : function (response) {
+            success : (response) => {
                 if (response.comments !== "") {
                     $("#containerComments").append(response.comments);
                 }
