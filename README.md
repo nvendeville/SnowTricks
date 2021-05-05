@@ -1,3 +1,6 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a9456d9b8e444147aa78363ea2c19f49)](https://www.codacy.com/gh/nvendeville/SnowTricks/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nvendeville/SnowTricks&amp;utm_campaign=Badge_Grade)
+
+
 # SnowTricks
 Projet 6 - Développeur d'application - PHP / Symfony - OpenClassRooms
 
