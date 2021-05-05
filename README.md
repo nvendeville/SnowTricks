@@ -1,4 +1,7 @@
 # SnowTricks
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c7bbf11362ed4af2802d9efdd742b815)](https://app.codacy.com/gh/nvendeville/SnowTricks?utm_source=github.com&utm_medium=referral&utm_content=nvendeville/SnowTricks&utm_campaign=Badge_Grade_Settings)
+
 Projet 6 - Développeur d'application - PHP / Symfony - OpenClassRooms
 
 # prerequest
