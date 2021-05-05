@@ -5,15 +5,18 @@ Projet 6 - Développeur d'application - PHP / Symfony - OpenClassRooms
 Composer https://getcomposer.org/download/
 
 # install and run
-- **Step 1** : Clone the Github repository
 
-- **Step 2** : In your Terminal paste the URL cloned after the command ``git clone``
+- **Step 1** : In your Terminal run ``git clone https://github.com/nvendeville/SnowTricks.git``
+
+- **Step 2** : In your Terminal run ``cd SnowTricks``
 
 - **Step 3** : In your Terminal run the command ``composer install``
 
-- **Step 4** : Choose a name for your DataBase
+- **Step 4** : Rename the file **.env.dist** to **.env**
 
-- **Step 5** : Update ``###> doctrine/doctrine-bundle ###`` in your file **.env**
+- **Step 5** : Choose a name for your DataBase
+
+- **Step 6** : Update ``###> doctrine/doctrine-bundle ###`` in your file **.env**
 
   - Uncomment the ligne related to your SGBQ
   
@@ -25,7 +28,7 @@ Composer https://getcomposer.org/download/
     
   - Set the db_user and/or db_password and/or db_name (name chosen on step 4)
 
-- **Step 5** : Update ``###> symfony/mailer ###`` in your file **.env**
+- **Step 7** : Update ``###> symfony/mailer ###`` in your file **.env**
   
   - Uncomment the MAILER_DSN related to your SMTP server
   
@@ -33,10 +36,10 @@ Composer https://getcomposer.org/download/
   
   - Set the smtp_user, smtp_password and smtp_server:port
   
-- **Step 6** : In your Terminal, create and set your database 
+- **Step 8** : In your Terminal, create and set your database 
   - Run ``php bin/console doctrine:database:create`` give the name chosen on step 4
   - Run ``php bin/console make:migration``
   - Run ``php bin/console doctrine:migrations:migrate``
   - Run ``php bin/console doctrine:fixtures:load``
 
-- **Step 7** : From your browser go to http://locahost:8000
+- **Step 9** : From your browser go to http://locahost:8000
