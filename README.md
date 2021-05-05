@@ -35,8 +35,8 @@ Composer https://getcomposer.org/download/
   
 - **Step 6** : In your Terminal, create and set your database 
   - Run ``php bin/console doctrine:database:create`` give the name chosen on step 4
-  - Run ``php bin/console make:migration
-  - Run ``php bin/console doctrine:migrations:migrate
-  - Run ``php bin/console doctrine:fixtures:load
+  - Run ``php bin/console make:migration``
+  - Run ``php bin/console doctrine:migrations:migrate``
+  - Run ``php bin/console doctrine:fixtures:load``
 
 - **Step 7** : From your browser go to http://locahost:8000
