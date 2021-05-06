@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     let loadComments = function () {
         $.ajax({
             url : "/trick/" + slug + "/comments",

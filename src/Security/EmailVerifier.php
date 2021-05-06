@@ -27,15 +27,13 @@ class EmailVerifier
         $this->entityManager = $manager;
     }
 
-    public function sendEmailConfirmation(
-        string $verifyEmailRouteName,
-        UserInterface $user,
-        TemplatedEmail $email
-    ): void {
+    public function sendEmailConfirmation(string $verifyEmailRouteName, UserInterface $user, TemplatedEmail $email): void
+    {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
             $user->getId(),
-            $user->getEmail()
+            $user->getEmail(),
+            ['id' => $user->getId()]
         );
 
         $context = $email->getContext();
@@ -43,7 +41,8 @@ class EmailVerifier
         $context['expiresAt'] = $signatureComponents->getExpiresAt();
 
         $email->context($context);
-            $this->mailer->send($email);
+
+        $this->mailer->send($email);
     }
 
     /**

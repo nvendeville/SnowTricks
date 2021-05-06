@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UsersRepository;
 use App\Security\EmailVerifier;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
@@ -63,7 +64,7 @@ class RegistrationController extends AbstractController
                         $user,
                         (
                             new TemplatedEmail())->from(new Address(
-                                'nathalievendeville466@gmail.com',
+                                'user@exemple.com',
                                 'Snowtricks Admin'
                             ))
                             ->to($user->getEmail())->subject('Merci de valider votre adresse mail')
@@ -91,13 +92,23 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/verify/email", name="app_verify_email")
      */
-    public function verifyUserEmail(Request $request): Response
+    public function verifyUserEmail(Request $request, UsersRepository $userRepository): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $id = $request->get('id');
+
+        if (null === $id) {
+            return $this->redirectToRoute('app_register');
+        }
+
+        $user = $userRepository->find($id);
+
+        if (null === $user) {
+            return $this->redirectToRoute('app_register');
+        }
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+            $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $exception->getReason());
 
@@ -105,8 +116,8 @@ class RegistrationController extends AbstractController
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Merci. Votre compte est maintenant validé.');
+        $this->addFlash('success', 'Bravo. Votre compte a bien été validé.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('accueil');
     }
 }

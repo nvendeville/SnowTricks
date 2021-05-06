@@ -5,7 +5,6 @@ window.onload = () => {
 
     // initialisation du gestionnaire de transfert
     let getDataTransfer = () => new DataTransfer();
-    const {concat} = Array.prototype;
 
     // test de compatibilité des navigateurs (surtout pour les vieux)
     try {
@@ -31,14 +30,9 @@ window.onload = () => {
 
     // création de la liste d"images à uploader par rapport aux sélectionnées
     let createFileList = function () {
-        const files = concat.apply([], arguments);
-        let index = 0;
-        const {length} = files;
-
         const dataTransfer = getDataTransfer();
-
-        for (; index < length; index++) {
-            dataTransfer.items.add(files[index]);
+        for (let index = 0; index < fileList.length; index++) {
+            dataTransfer.items.add(fileList[index]);
         }
         return dataTransfer.files;
     };
@@ -91,7 +85,7 @@ window.onload = () => {
     // submit du formulaire
     $("#trick_form_submit_button").click(function () {
         // on récupère les images à uploader dans le multi-select
-        trickFormImages.files = createFileList(fileList);
+        trickFormImages.files = createFileList();
         // on post le formulaire
         $("#trick_form").submit();
         // on renvoie false pour ne pas poster deux fois le formulaire
@@ -112,10 +106,10 @@ window.onload = () => {
         renderFileList();
     });
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////Mettre une image à la une//////////////////////////////////////////////////////////////////////
 
-    let featuredImgs = document.querySelectorAll("[data-feature]");
+let featuredImgs = document.querySelectorAll("[data-feature]");
 
 for (let featuredImg of featuredImgs) {
     // On écoute le clic
@@ -153,7 +147,7 @@ for (let featuredImg of featuredImgs) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////Supprimer un média//////////////////////////////////////////////////////////////////////
 
-    let links = document.querySelectorAll("[data-delete]");
+let links = document.querySelectorAll("[data-delete]");
 
 for (let link of links) {
     link.addEventListener("click", function (e) {
