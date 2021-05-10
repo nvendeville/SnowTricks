@@ -115,7 +115,7 @@ class Trick implements JsonSerializable
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeInterface
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
@@ -128,7 +128,7 @@ class Trick implements JsonSerializable
         $this->createdAt = new \DateTime();
     }
 
-    public function getUpdatedAt(): ?DateTimeInterface
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }

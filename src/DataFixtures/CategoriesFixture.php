@@ -12,10 +12,19 @@ class CategoriesFixture extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        for ($count = 0; $count < 6; $count++) {
+        $categoryArrays = [
+            'flip',
+            'grab',
+            'one foot trick',
+            'rotation',
+            'slide'
+        ];
+
+        foreach ($categoryArrays as $categoryArray) {
             $categoryFixture = new Category();
-            $categoryFixture->setName('catégorie' . $count);
-            $this->setReference(self::CATEGORY_REFERENCE . $count, $categoryFixture);
+            $categoryFixture->setName($categoryArray);
+
+            $this->setReference(self::CATEGORY_REFERENCE . $categoryArray, $categoryFixture);
 
             $manager->persist($categoryFixture);
         }
