@@ -17,7 +17,7 @@ class UsersFixture extends Fixture
             $userFixture->setEmail('pseudo' . $count . '@gmail.com');
             $userFixture->setPassword('pseudo' . $count . '!');
             $userFixture->setPseudo('pseudo' . $count);
-            $userFixture->setAvatar('/img/avatar' . $count . '.jpg');
+            $userFixture->setAvatar('avatar' . $count . '.jpg');
 
             $this->setReference(self::USER_REFERENCE . $count, $userFixture);
 

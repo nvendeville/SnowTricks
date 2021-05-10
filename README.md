@@ -45,4 +45,6 @@ Composer https://getcomposer.org/download/
   - Run ``php bin/console doctrine:migrations:migrate``
   - Run ``php bin/console doctrine:fixtures:load``
 
+- **Step 3** : In your Terminal run the command ``symfony serve``
+
 - **Step 9** : From your browser go to http://locahost:8000

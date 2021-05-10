@@ -18,7 +18,7 @@ class CommentsFixture extends Fixture implements DependentFixtureInterface
             $commentFixture->setCreatedAt();
             $commentFixture->setUpdatedAt();
             $commentFixture->setUser($this->getReference(UsersFixture::USER_REFERENCE . random_int(0, 9)));
-            $commentFixture->setTrick($this->getReference(TricksFixture::TRICK_REFERENCE . random_int(14, 19)));
+            $commentFixture->setTrick($this->getReference(TricksFixture::TRICK_REFERENCE . random_int(15, 19)));
             $commentFixture->setParentId(random_int(0, 19));
 
             $manager->persist($commentFixture);
