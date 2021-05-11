@@ -18,7 +18,7 @@ class MediaFixture extends Fixture implements DependentFixtureInterface
             $mediaFixture->setFeaturedImg(0);
             $mediaFixture->setLink('trick' . $count . '.jpg');
             $mediaFixture->setType('image');
-            $mediaFixture->setTrick($this->getReference(TricksFixture::TRICK_REFERENCE . random_int(15, 19)));
+            $mediaFixture->setTrick($this->getReference(TricksFixture::TRICK_REFERENCE . random_int(0, 6)));
 
             $this->setReference(self::MEDIA_REFERENCE . $count, $mediaFixture);
 

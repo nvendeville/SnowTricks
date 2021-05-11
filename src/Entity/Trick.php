@@ -23,7 +23,7 @@ class Trick implements JsonSerializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=150, unique=true)
      */
     private $name;
 

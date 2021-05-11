@@ -19,12 +19,13 @@ class CategoriesFixture extends Fixture
             'rotation',
             'slide'
         ];
+        $count = 0;
 
         foreach ($categoryArrays as $categoryArray) {
             $categoryFixture = new Category();
             $categoryFixture->setName($categoryArray);
 
-            $this->setReference(self::CATEGORY_REFERENCE . $categoryArray, $categoryFixture);
+            $this->setReference(self::CATEGORY_REFERENCE . $count++, $categoryFixture);
 
             $manager->persist($categoryFixture);
         }

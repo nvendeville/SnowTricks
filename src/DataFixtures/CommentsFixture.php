@@ -12,14 +12,13 @@ class CommentsFixture extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        for ($count = 0; $count < 80; $count++) {
+        for ($count = 0; $count < 30; $count++) {
             $commentFixture = new Comment();
             $commentFixture->setDescription("Commentaire fictif " . $count);
             $commentFixture->setCreatedAt();
             $commentFixture->setUpdatedAt();
             $commentFixture->setUser($this->getReference(UsersFixture::USER_REFERENCE . random_int(0, 9)));
-            $commentFixture->setTrick($this->getReference(TricksFixture::TRICK_REFERENCE . random_int(15, 19)));
-            $commentFixture->setParentId(random_int(0, 19));
+            $commentFixture->setTrick($this->getReference(TricksFixture::TRICK_REFERENCE . random_int(0, 7)));
 
             $manager->persist($commentFixture);
         }

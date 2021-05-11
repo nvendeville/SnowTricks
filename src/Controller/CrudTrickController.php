@@ -198,7 +198,6 @@ class CrudTrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->resetFeaturedImg();
             if ($form->get('img')->getData() != "") {
                 $this->setImage($form->get('img')->getData(), $photoDir, $trick);
             }

@@ -23,12 +23,12 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=150, unique=true)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="text")
      */
     private $roles = [];
 
@@ -39,7 +39,7 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255,  unique=true)
+     * @ORM\Column(type="string", length=150,  unique=true)
      */
     private $pseudo;
 
