@@ -237,6 +237,16 @@ class Trick implements JsonSerializable
         return 'default_featured_img.jpg';
     }
 
+    public function hasFeaturedImg(): bool
+    {
+        foreach ($this->getMedia() as $media) {
+            if ($media->getFeaturedImg()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function resetFeaturedImg(): Media
     {
         foreach ($this->getMedia() as $media) {

@@ -199,7 +199,7 @@ class CrudTrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('img')->getData() != "") {
-                $this->setImage($form->get('img')->getData(), $photoDir, $trick);
+                $this->setImage($form->get('img')->getData(), $photoDir, $trick, $trick->hasFeaturedImg());
             }
             if ($form->get('video')->getData() != "") {
                 $this->setVideo($form->get('video')->getData(), $trick);

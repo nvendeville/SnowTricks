@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 trait SetImage
 {
 
-    public function setImage(array $formImages, string $photoDir, Trick $trick)
+    public function setImage(array $formImages, string $photoDir, Trick $trick, bool $hasFeaturedImg = false)
     {
         foreach ($formImages as $image) {
             $mediaImg = new Media();
@@ -23,7 +23,7 @@ trait SetImage
             $mediaImg->setLink($filenameImg);
             $mediaImg->setType('image');
             $mediaImg->setFeaturedImg(false);
-            if ($image == $formImages[0]) {
+            if (!$hasFeaturedImg && $image == $formImages[0]) {
                 $mediaImg->setFeaturedImg(true);
             }
             $trick->addMedium($mediaImg);
